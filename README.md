@@ -20,3 +20,30 @@ The scope of the platform is to manage the activities of a library and to keep t
    - the main class where the user can choose which functionalities to use from the existing 27
 
 # Available Functionalities
+1. Listing the details about the library
+2. Listing all the books from the library
+3. Adding a new book into the library
+4. Removing a book from the library
+5. Adding copies of a physical book to the library
+6. Removing copies of a physical book from the library
+7. Listing all the sections of the library
+8. Adding a new section to the library
+9. Removing a section from the library
+10. Listing all the books from a section
+11. Adding a book into a section
+12. Removing a book from a section
+13. Listing all authors
+14. Adding an author into the library
+15. Removing an author from the library
+16. Listing all the books of an author that are in the library
+17. Adding a new book from an author
+18. Listing all the enrolled readers of the library
+19. Enrolling a new reader into the library
+20. Removing a reader from the library
+21. Viewing the books lent by a reader
+22. Lending a book by a reader
+23. Returning a book by a reader
+24. Listing all publishing houses with whom the library is associated
+25. Associating a new publishing house with the library
+26. Removing a publishing house
+27. Listing all the books from a publishing house
