@@ -1,7 +1,7 @@
-## Library
+# Library
 The scope of the platform is to manage the activities of a library and to keep track of its books, authors, readers, sections and publishing houses.
 
-# Objects defined on the platform
+## Objects defined on the platform
 1. Book class
    - an abstract class which stores basic information about a book (title, number of pages, publishing date, section, author, publishing house)
    - Pbook -> extends the Book base class, representing a physical book (adds the atribute number of copies)
@@ -19,7 +19,7 @@ The scope of the platform is to manage the activities of a library and to keep t
 6. Program class
    - the main class where the user can choose which functionalities to use from the existing 27
 
-# Available Functionalities
+## Available Functionalities
 1. Listing the details about the library
 2. Listing all the books from the library
 3. Adding a new book into the library
