@@ -36,7 +36,7 @@ public class Program {
                     int typeOption = scanner.nextInt();
 
                     System.out.print("Title: ");
-                    String title = scanner.nextLine();
+                    String title = scanner.next();
 
                     System.out.print("Number of pages: ");
                     int noPages = scanner.nextInt();
@@ -46,7 +46,7 @@ public class Program {
                     do {
                         System.out.print("Publishing date (format dd/mm/yyyy): ");
                         try {
-                            publishingDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                            publishingDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                             ok = Boolean.TRUE;
                         } catch (ParseException e) {
                             System.out.println("The date does not match the format.");
@@ -60,7 +60,7 @@ public class Program {
                         int typeSection = scanner.nextInt();
 
                         System.out.print("Section name: ");
-                        String sectionName = scanner.nextLine();
+                        String sectionName = scanner.next();
                         if (typeSection == 1) {
                             try {
                                 section = library.getSection(sectionName);
@@ -81,7 +81,7 @@ public class Program {
                         int typeAuthor = scanner.nextInt();
 
                         System.out.print("Author name: ");
-                        String authorName = scanner.nextLine();
+                        String authorName = scanner.next();
                         if (typeAuthor == 1) {
                             try {
                                 author = library.getAuthor(authorName);
@@ -95,7 +95,7 @@ public class Program {
                             do {
                                 System.out.print("Birthdate (format dd/mm/yyyy): ");
                                 try {
-                                    birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                                    birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                                     ok1 = Boolean.TRUE;
                                 } catch (ParseException e) {
                                     System.out.println("The date does not match the format.");
@@ -103,7 +103,7 @@ public class Program {
                             } while (!ok1);
 
                             System.out.print("Email: ");
-                            String email = scanner.nextLine();
+                            String email = scanner.next();
 
                             author = new Author(authorName, birthdate, email);
                             ok = Boolean.TRUE;
@@ -117,7 +117,7 @@ public class Program {
                         int typePublishingHouse = scanner.nextInt();
 
                         System.out.print("Publishing house name: ");
-                        String publishingHouseName = scanner.nextLine();
+                        String publishingHouseName = scanner.next();
                         if (typePublishingHouse == 1) {
                             try {
                                 publishingHouse = library.getPublishingHouse(publishingHouseName);
@@ -131,7 +131,7 @@ public class Program {
                             do {
                                 System.out.print("Establishment date (format dd/mm/yyyy): ");
                                 try {
-                                    establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                                    establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                                     ok1 = Boolean.TRUE;
                                 } catch (ParseException e) {
                                     System.out.println("The date does not match the format.");
@@ -150,7 +150,7 @@ public class Program {
                         library.addBook(title, noPages, publishingDate, section, author, publishingHouse, noCopies);
                     } else {
                         System.out.print("Format: ");
-                        String format = scanner.nextLine();
+                        String format = scanner.next();
 
                         library.addBook(title, noPages, publishingDate, section, author, publishingHouse, format);
                     }
@@ -158,14 +158,14 @@ public class Program {
 
                 case 4:
                     System.out.print("Book title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     library.removeBook(title);
                     break;
 
                 case 5:
                     System.out.print("Book title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     System.out.print("One(1) or more copies? ");
                     int typeCopies = scanner.nextInt();
@@ -182,7 +182,7 @@ public class Program {
 
                 case 6:
                     System.out.print("Book title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     System.out.print("One(1) or more copies? ");
                     typeCopies = scanner.nextInt();
@@ -203,28 +203,28 @@ public class Program {
 
                 case 8:
                     System.out.print("Section name: ");
-                    String sectionName = scanner.nextLine();
+                    String sectionName = scanner.next();
 
                     library.addSection(sectionName);
                     break;
 
                 case 9:
                     System.out.print("Section name: ");
-                    sectionName = scanner.nextLine();
+                    sectionName = scanner.next();
 
                     library.removeSection(sectionName);
                     break;
 
                 case 10:
                     System.out.print("Section name: ");
-                    sectionName = scanner.nextLine();
+                    sectionName = scanner.next();
 
                     library.listBooksFromSection(sectionName);
                     break;
 
                 case 11:
                     System.out.print("Section name: ");
-                    sectionName = scanner.nextLine();
+                    sectionName = scanner.next();
 
                     System.out.println("Available types:");
                     System.out.println("1. Physical book");
@@ -232,7 +232,7 @@ public class Program {
                     typeOption = scanner.nextInt();
 
                     System.out.print("Title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     System.out.print("Number of pages: ");
                     noPages = scanner.nextInt();
@@ -242,7 +242,7 @@ public class Program {
                     do {
                         System.out.print("Publishing date (format dd/mm/yyyy): ");
                         try {
-                            publishingDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                            publishingDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                             ok = Boolean.TRUE;
                         } catch (ParseException e) {
                             System.out.println("The date does not match the format.");
@@ -256,7 +256,7 @@ public class Program {
                         int typeAuthor = scanner.nextInt();
 
                         System.out.print("Author name: ");
-                        String authorName = scanner.nextLine();
+                        String authorName = scanner.next();
                         if (typeAuthor == 1) {
                             try {
                                 author = library.getAuthor(authorName);
@@ -270,7 +270,7 @@ public class Program {
                             do {
                                 System.out.print("Birthdate (format dd/mm/yyyy): ");
                                 try {
-                                    birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                                    birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                                     ok1 = Boolean.TRUE;
                                 } catch (ParseException e) {
                                     System.out.println("The date does not match the format.");
@@ -278,7 +278,7 @@ public class Program {
                             } while (!ok1);
 
                             System.out.print("Email: ");
-                            String email = scanner.nextLine();
+                            String email = scanner.next();
 
                             author = new Author(authorName, birthdate, email);
                             ok = Boolean.TRUE;
@@ -292,7 +292,7 @@ public class Program {
                         int typePublishingHouse = scanner.nextInt();
 
                         System.out.print("Publishing house name: ");
-                        String publishingHouseName = scanner.nextLine();
+                        String publishingHouseName = scanner.next();
                         if (typePublishingHouse == 1) {
                             try {
                                 publishingHouse = library.getPublishingHouse(publishingHouseName);
@@ -306,7 +306,7 @@ public class Program {
                             do {
                                 System.out.print("Establishment date (format dd/mm/yyyy): ");
                                 try {
-                                    establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                                    establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                                     ok1 = Boolean.TRUE;
                                 } catch (ParseException e) {
                                     System.out.println("The date does not match the format.");
@@ -325,7 +325,7 @@ public class Program {
                         library.addBookToSection(sectionName, title, noPages, publishingDate, author, publishingHouse, noCopies);
                     } else {
                         System.out.print("Format: ");
-                        String format = scanner.nextLine();
+                        String format = scanner.next();
 
                         library.addBookToSection(sectionName, title, noPages, publishingDate, author, publishingHouse, format);
                     }
@@ -333,10 +333,10 @@ public class Program {
 
                 case 12:
                     System.out.print("Section name: ");
-                    sectionName = scanner.nextLine();
+                    sectionName = scanner.next();
 
                     System.out.print("Book title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     library.removeBookFromSection(sectionName, title);
                     break;
@@ -347,14 +347,14 @@ public class Program {
 
                 case 14:
                     System.out.print("Author name: ");
-                    String authorName = scanner.nextLine();
+                    String authorName = scanner.next();
 
                     Date birthdate = null;
                     boolean ok1 = Boolean.FALSE;
                     do {
                         System.out.print("Birthdate (format dd/mm/yyyy): ");
                         try {
-                            birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                            birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                             ok1 = Boolean.TRUE;
                         } catch (ParseException e) {
                             System.out.println("The date does not match the format.");
@@ -362,28 +362,28 @@ public class Program {
                     } while (!ok1);
 
                     System.out.print("Email: ");
-                    String email = scanner.nextLine();
+                    String email = scanner.next();
 
                     library.addAuthor(authorName, birthdate, email);
                     break;
 
                 case 15:
                     System.out.print("Author name: ");
-                    authorName = scanner.nextLine();
+                    authorName = scanner.next();
 
                     library.removeAuthor(authorName);
                     break;
 
                 case 16:
                     System.out.print("Author name: ");
-                    authorName = scanner.nextLine();
+                    authorName = scanner.next();
 
                     library.listAllBooksFromAuthor(authorName);
                     break;
 
                 case 17:
                     System.out.print("Author name: ");
-                    authorName = scanner.nextLine();
+                    authorName = scanner.next();
 
                     System.out.println("Available types:");
                     System.out.println("1. Physical book");
@@ -391,7 +391,7 @@ public class Program {
                     typeOption = scanner.nextInt();
 
                     System.out.print("Title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     System.out.print("Number of pages: ");
                     noPages = scanner.nextInt();
@@ -403,7 +403,7 @@ public class Program {
                         int typeSection = scanner.nextInt();
 
                         System.out.print("Section name: ");
-                        sectionName = scanner.nextLine();
+                        sectionName = scanner.next();
                         if (typeSection == 1) {
                             try {
                                 section = library.getSection(sectionName);
@@ -424,7 +424,7 @@ public class Program {
                         int typePublishingHouse = scanner.nextInt();
 
                         System.out.print("Publishing house name: ");
-                        String publishingHouseName = scanner.nextLine();
+                        String publishingHouseName = scanner.next();
                         if (typePublishingHouse == 1) {
                             try {
                                 publishingHouse = library.getPublishingHouse(publishingHouseName);
@@ -438,7 +438,7 @@ public class Program {
                             do {
                                 System.out.print("Establishment date (format dd/mm/yyyy): ");
                                 try {
-                                    establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                                    establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                                     ok1 = Boolean.TRUE;
                                 } catch (ParseException e) {
                                     System.out.println("The date does not match the format.");
@@ -454,7 +454,7 @@ public class Program {
                         library.addBookFromAuthor(authorName, title, noPages, section, publishingHouse);
                     } else {
                         System.out.print("Format: ");
-                        String format = scanner.nextLine();
+                        String format = scanner.next();
 
                         library.addBookFromAuthor(authorName, title, noPages, section, publishingHouse, format);
                     }
@@ -466,14 +466,14 @@ public class Program {
 
                 case 19:
                     System.out.print("Reader name: ");
-                    String readerName = scanner.nextLine();
+                    String readerName = scanner.next();
 
                     birthdate = null;
                     ok1 = Boolean.FALSE;
                     do {
                         System.out.print("Birthdate (format dd/mm/yyyy): ");
                         try {
-                            birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                            birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                             ok1 = Boolean.TRUE;
                         } catch (ParseException e) {
                             System.out.println("The date does not match the format.");
@@ -481,44 +481,44 @@ public class Program {
                     } while (!ok1);
 
                     System.out.print("Email: ");
-                    email = scanner.nextLine();
+                    email = scanner.next();
 
                     System.out.print("Address: ");
-                    String address = scanner.nextLine();
+                    String address = scanner.next();
 
                     library.addReader(readerName, birthdate, email, address);
                     break;
 
                 case 20:
                     System.out.print("Reader name: ");
-                    readerName = scanner.nextLine();
+                    readerName = scanner.next();
 
                     library.removeReader(readerName);
                     break;
 
                 case 21:
                     System.out.print("Reader name: ");
-                    readerName = scanner.nextLine();
+                    readerName = scanner.next();
 
                     library.listBooksLent(readerName);
                     break;
 
                 case 22:
                     System.out.print("Reader name: ");
-                    readerName = scanner.nextLine();
+                    readerName = scanner.next();
 
                     System.out.print("Book title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     library.lendBook(readerName, title);
                     break;
 
                 case 23:
                     System.out.print("Reader name: ");
-                    readerName = scanner.nextLine();
+                    readerName = scanner.next();
 
                     System.out.print("Book title: ");
-                    title = scanner.nextLine();
+                    title = scanner.next();
 
                     library.returnBook(readerName, title);
                     break;
@@ -529,14 +529,14 @@ public class Program {
 
                 case 25:
                     System.out.print("Publishing house name: ");
-                    String publishingHouseName = scanner.nextLine();
+                    String publishingHouseName = scanner.next();
 
                     Date establishmentDate = null;
                     ok1 = Boolean.FALSE;
                     do {
                         System.out.print("Establishment date (format dd/mm/yyyy): ");
                         try {
-                            establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+                            establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.next());
                             ok1 = Boolean.TRUE;
                         } catch (ParseException e) {
                             System.out.println("The date does not match the format.");
@@ -548,14 +548,14 @@ public class Program {
 
                 case 26:
                     System.out.print("Publishing house name: ");
-                    publishingHouseName = scanner.nextLine();
+                    publishingHouseName = scanner.next();
 
                     library.removePublishingHouse(publishingHouseName);
                     break;
 
                 case 27:
                     System.out.print("Publishing house name: ");
-                    publishingHouseName = scanner.nextLine();
+                    publishingHouseName = scanner.next();
 
                     library.listBooksFromPublishingHouse(publishingHouseName);
                     break;
