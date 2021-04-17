@@ -10,10 +10,132 @@ import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class Program {
+    private static final Library library = new Library();
+    private static final Audit audit = Audit.getInstance();
+    private static final CSV csv = CSV.getInstance();
+
     public static void main(String[] args) {
-        Library library = new Library();
+        readAuthors();
+        readSections();
+        readPublishingHouse();
+        readBooks();
+        readReaders();
+
+        runProgram();
+    }
+
+    public static void readAuthors(){
+        for (String line : csv.read("authors.csv")){
+            String[] authorDetails = line.split(", ");
+            String name = authorDetails[0];
+
+            Date birthdate = null;
+            try {
+                birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(authorDetails[1]);
+            } catch (Exception e){
+                System.out.println("The date format is incorrect.");
+            }
+
+            String email = authorDetails[2];
+
+            library.addAuthor(name, birthdate, email);
+            audit.log("Adding author " + name, new Date());
+        }
+    }
+
+    public static void readSections(){
+        for (String name : csv.read("sections.csv")){
+            library.addSection(name);
+            audit.log("Adding section " + name, new Date());
+        }
+    }
+
+    public static void readPublishingHouse(){
+        for (String line : csv.read("publishingHouses.csv")){
+            String[] publishingHouseDetails = line.split(", ");
+            String name = publishingHouseDetails[0];
+
+            Date establishmentDate = null;
+            try {
+                establishmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(publishingHouseDetails[1]);
+            } catch (Exception e){
+                System.out.println("The date format is incorrect.");
+            }
+
+            library.addPublishingHouse(name, establishmentDate);
+            audit.log("Adding publishing house " + name, new Date());
+        }
+    }
+
+    public static void readBooks(){
+        for (String line : csv.read("books.csv")){
+            String[] bookDetails = line.split(", ");
+            String title = bookDetails[1];
+            int noPages = Integer.parseInt(bookDetails[2]);
+
+            Date publishingDate = null;
+            try {
+                publishingDate = new SimpleDateFormat("dd/MM/yyyy").parse(bookDetails[3]);
+            } catch (Exception e){
+                System.out.println("The date format is incorrect.");
+            }
+
+
+            Section section = null;
+            try {
+                section = library.getSection(bookDetails[4]);
+            } catch (Exception e){
+                System.out.println("The section " + bookDetails[4] + " doesn't exist.");
+            }
+
+            Author author = null;
+            try {
+                author = library.getAuthor(bookDetails[5]);
+            } catch (Exception e){
+                System.out.println("The author " + bookDetails[5] + " doesn't exist.");
+            }
+
+            PublishingHouse publishingHouse = null;
+            try {
+                publishingHouse = library.getPublishingHouse(bookDetails[6]);
+            } catch (Exception e){
+                System.out.println("The publishing house " + bookDetails[6] + " doesn't exist");
+            }
+
+            if (bookDetails[0].equalsIgnoreCase("pbook")){
+                int noCopies = Integer.parseInt(bookDetails[7]);
+                library.addBook(title, noPages, publishingDate, section, author, publishingHouse, noCopies);
+            } else {
+                String format = bookDetails[7];
+                library.addBook(title, noPages, publishingDate, section, author, publishingHouse, format);
+            }
+
+            audit.log("Adding book " + title, new Date());
+        }
+    }
+
+    public static void readReaders(){
+        for (String line : csv.read("readers.csv")){
+            String[] readerDetails = line.split(", ");
+            String name = readerDetails[0];
+
+            Date birthdate = null;
+            try {
+                birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(readerDetails[1]);
+            } catch (Exception e){
+                System.out.println("The date format is incorrect.");
+            }
+
+            String email = readerDetails[2];
+            String address = readerDetails[3];
+
+            library.addReader(name, birthdate, email, address);
+            audit.log("Adding reader " + name, new Date());
+        }
+    }
+
+    public static void runProgram(){
         Scanner scanner = new Scanner(System.in);
-        Audit audit = Audit.getInstance();
         int option;
         boolean OK;
 
@@ -24,12 +146,12 @@ public class Program {
             switch (option) {
                 case 1:
                     library.details();
-                    audit.write("Listing details", new Date());
+                    audit.log("Listing details", new Date());
                     break;
 
                 case 2:
                     library.listBooks();
-                    audit.write("Listing books", new Date());
+                    audit.log("Listing books", new Date());
                     break;
 
                 case 3:
@@ -158,7 +280,7 @@ public class Program {
                         library.addBook(title, noPages, publishingDate, section, author, publishingHouse, format);
                     }
 
-                    audit.write("Adding book " + title, new Date());
+                    audit.log("Adding book " + title, new Date());
                     break;
 
                 case 4:
@@ -166,14 +288,14 @@ public class Program {
                     title = scanner.next();
 
                     library.removeBook(title);
-                    audit.write("Removing book " + title, new Date());
+                    audit.log("Removing book " + title, new Date());
                     break;
 
                 case 5:
                     System.out.print("Book title: ");
                     title = scanner.next();
 
-                    System.out.print("One(1) or more copies? ");
+                    System.out.print("One(1) or more copies(2)? ");
                     int typeCopies = scanner.nextInt();
 
                     if (typeCopies == 1) {
@@ -185,14 +307,14 @@ public class Program {
                         library.addCopies(title, noCopies);
                     }
 
-                    audit.write("Adding copies of book " + title, new Date());
+                    audit.log("Adding copies of book " + title, new Date());
                     break;
 
                 case 6:
                     System.out.print("Book title: ");
                     title = scanner.next();
 
-                    System.out.print("One(1) or more copies? ");
+                    System.out.print("One(1) or more copies(2)? ");
                     typeCopies = scanner.nextInt();
 
                     if (typeCopies == 1) {
@@ -204,12 +326,12 @@ public class Program {
                         library.lostCopy(title, noCopies);
                     }
 
-                    audit.write("Removing copies of book " + title, new Date());
+                    audit.log("Removing copies of book " + title, new Date());
                     break;
 
                 case 7:
                     library.listSections();
-                    audit.write("Listing sections", new Date());
+                    audit.log("Listing sections", new Date());
                     break;
 
                 case 8:
@@ -217,7 +339,7 @@ public class Program {
                     String sectionName = scanner.next();
 
                     library.addSection(sectionName);
-                    audit.write("Adding section " + sectionName, new Date());
+                    audit.log("Adding section " + sectionName, new Date());
                     break;
 
                 case 9:
@@ -225,7 +347,7 @@ public class Program {
                     sectionName = scanner.next();
 
                     library.removeSection(sectionName);
-                    audit.write("Removing section " + sectionName, new Date());
+                    audit.log("Removing section " + sectionName, new Date());
                     break;
 
                 case 10:
@@ -233,7 +355,7 @@ public class Program {
                     sectionName = scanner.next();
 
                     library.listBooksFromSection(sectionName);
-                    audit.write("Listing books from section " + sectionName, new Date());
+                    audit.log("Listing books from section " + sectionName, new Date());
                     break;
 
                 case 11:
@@ -344,7 +466,7 @@ public class Program {
                         library.addBookToSection(sectionName, title, noPages, publishingDate, author, publishingHouse, format);
                     }
 
-                    audit.write("Adding book " + title + " into section " + sectionName, new Date());
+                    audit.log("Adding book " + title + " into section " + sectionName, new Date());
                     break;
 
                 case 12:
@@ -355,12 +477,12 @@ public class Program {
                     title = scanner.next();
 
                     library.removeBookFromSection(sectionName, title);
-                    audit.write("Removing book " + title + " into section " + sectionName, new Date());
+                    audit.log("Removing book " + title + " into section " + sectionName, new Date());
                     break;
 
                 case 13:
                     library.listAllAuthors();
-                    audit.write("Listing authors", new Date());
+                    audit.log("Listing authors", new Date());
                     break;
 
                 case 14:
@@ -383,7 +505,7 @@ public class Program {
                     String email = scanner.next();
 
                     library.addAuthor(authorName, birthdate, email);
-                    audit.write("Adding author " + authorName, new Date());
+                    audit.log("Adding author " + authorName, new Date());
                     break;
 
                 case 15:
@@ -391,7 +513,7 @@ public class Program {
                     authorName = scanner.next();
 
                     library.removeAuthor(authorName);
-                    audit.write("Removing author " + authorName, new Date());
+                    audit.log("Removing author " + authorName, new Date());
                     break;
 
                 case 16:
@@ -399,7 +521,7 @@ public class Program {
                     authorName = scanner.next();
 
                     library.listAllBooksFromAuthor(authorName);
-                    audit.write("Listing books from author " + authorName, new Date());
+                    audit.log("Listing books from author " + authorName, new Date());
                     break;
 
                 case 17:
@@ -480,12 +602,12 @@ public class Program {
                         library.addBookFromAuthor(authorName, title, noPages, section, publishingHouse, format);
                     }
 
-                    audit.write("Adding book " + title + " from author " + authorName, new Date());
+                    audit.log("Adding book " + title + " from author " + authorName, new Date());
                     break;
 
                 case 18:
                     library.listAllReaders();
-                    audit.write("Listing readers", new Date());
+                    audit.log("Listing readers", new Date());
                     break;
 
                 case 19:
@@ -511,7 +633,7 @@ public class Program {
                     String address = scanner.next();
 
                     library.addReader(readerName, birthdate, email, address);
-                    audit.write("Enrolling reader " + readerName, new Date());
+                    audit.log("Enrolling reader " + readerName, new Date());
                     break;
 
                 case 20:
@@ -519,7 +641,7 @@ public class Program {
                     readerName = scanner.next();
 
                     library.removeReader(readerName);
-                    audit.write("Removing reader " + readerName, new Date());
+                    audit.log("Removing reader " + readerName, new Date());
                     break;
 
                 case 21:
@@ -527,7 +649,7 @@ public class Program {
                     readerName = scanner.next();
 
                     library.listBooksLent(readerName);
-                    audit.write("Listing lent books from reader " + readerName, new Date());
+                    audit.log("Listing lent books from reader " + readerName, new Date());
                     break;
 
                 case 22:
@@ -538,7 +660,7 @@ public class Program {
                     title = scanner.next();
 
                     library.lendBook(readerName, title);
-                    audit.write("Lending book " + title + " by reader "+ readerName, new Date());
+                    audit.log("Lending book " + title + " by reader "+ readerName, new Date());
                     break;
 
                 case 23:
@@ -549,12 +671,12 @@ public class Program {
                     title = scanner.next();
 
                     library.returnBook(readerName, title);
-                    audit.write("Returning book " + title + " by reader " + readerName, new Date());
+                    audit.log("Returning book " + title + " by reader " + readerName, new Date());
                     break;
 
                 case 24:
                     library.listAllPublishingHouses();
-                    audit.write("Listing publishing houses", new Date());
+                    audit.log("Listing publishing houses", new Date());
                     break;
 
                 case 25:
@@ -574,7 +696,7 @@ public class Program {
                     } while (!ok1);
 
                     library.addPublishingHouse(publishingHouseName, establishmentDate);
-                    audit.write("Adding publishing house " + publishingHouseName, new Date());
+                    audit.log("Adding publishing house " + publishingHouseName, new Date());
                     break;
 
                 case 26:
@@ -582,7 +704,7 @@ public class Program {
                     publishingHouseName = scanner.next();
 
                     library.removePublishingHouse(publishingHouseName);
-                    audit.write("Removing publishing house " + publishingHouseName, new Date());
+                    audit.log("Removing publishing house " + publishingHouseName, new Date());
                     break;
 
                 case 27:
@@ -590,7 +712,7 @@ public class Program {
                     publishingHouseName = scanner.next();
 
                     library.listBooksFromPublishingHouse(publishingHouseName);
-                    audit.write("Listing books from publishing house " + publishingHouseName, new Date());
+                    audit.log("Listing books from publishing house " + publishingHouseName, new Date());
                     break;
             }
 
@@ -604,6 +726,5 @@ public class Program {
                 OK = Boolean.FALSE;
             }
         } while (OK && option >= 1 && option <= 27);
-
     }
 }

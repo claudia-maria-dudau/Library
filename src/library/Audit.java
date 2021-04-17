@@ -18,7 +18,7 @@ public class Audit {
         return instance;
     }
 
-    public void write(String action, Date timestamp) {
+    public void log(String action, Date timestamp) {
         try (FileWriter writer = new FileWriter(new File("data/output/log.csv"), Boolean.TRUE)){
             writer.write(String.format("%s, %s\n", action, timestamp.toString()));
         } catch (IOException e){

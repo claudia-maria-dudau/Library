@@ -14,6 +14,10 @@ public class Library {
     private final TreeSet<Reader> readers = new TreeSet<>((r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
     private final TreeSet<PublishingHouse> publishingHouses = new TreeSet<>((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
 
+    public TreeSet<Author> getAuthors() {
+        return authors;
+    }
+
     @Override
     public String toString() {
         return "Library{" +
