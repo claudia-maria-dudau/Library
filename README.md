@@ -18,6 +18,8 @@ The scope of the platform is to manage the activities of a library and to keep t
    - a service class which stores a TreeSet of every component of the library and implements all the functionalities
 6. Program class
    - the main class where the user can choose which functionalities to use from the existing 27
+7. Audit class
+   - a singleton class which saves logs regarding the actions performed and their timestamps in the file log.csv
 
 ## Available Functionalities
 1. Listing the details about the library
