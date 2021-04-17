@@ -13,6 +13,7 @@ public class Program {
     public static void main(String[] args) {
         Library library = new Library();
         Scanner scanner = new Scanner(System.in);
+        Audit audit = Audit.getInstance();
         int option;
         boolean OK;
 
@@ -23,10 +24,12 @@ public class Program {
             switch (option) {
                 case 1:
                     library.details();
+                    audit.write("Listing details", new Date());
                     break;
 
                 case 2:
                     library.listBooks();
+                    audit.write("Listing books", new Date());
                     break;
 
                 case 3:
@@ -154,6 +157,8 @@ public class Program {
 
                         library.addBook(title, noPages, publishingDate, section, author, publishingHouse, format);
                     }
+
+                    audit.write("Adding book " + title, new Date());
                     break;
 
                 case 4:
@@ -161,6 +166,7 @@ public class Program {
                     title = scanner.next();
 
                     library.removeBook(title);
+                    audit.write("Removing book " + title, new Date());
                     break;
 
                 case 5:
@@ -178,6 +184,8 @@ public class Program {
 
                         library.addCopies(title, noCopies);
                     }
+
+                    audit.write("Adding copies of book " + title, new Date());
                     break;
 
                 case 6:
@@ -195,10 +203,13 @@ public class Program {
 
                         library.lostCopy(title, noCopies);
                     }
+
+                    audit.write("Removing copies of book " + title, new Date());
                     break;
 
                 case 7:
                     library.listSections();
+                    audit.write("Listing sections", new Date());
                     break;
 
                 case 8:
@@ -206,6 +217,7 @@ public class Program {
                     String sectionName = scanner.next();
 
                     library.addSection(sectionName);
+                    audit.write("Adding section " + sectionName, new Date());
                     break;
 
                 case 9:
@@ -213,6 +225,7 @@ public class Program {
                     sectionName = scanner.next();
 
                     library.removeSection(sectionName);
+                    audit.write("Removing section " + sectionName, new Date());
                     break;
 
                 case 10:
@@ -220,6 +233,7 @@ public class Program {
                     sectionName = scanner.next();
 
                     library.listBooksFromSection(sectionName);
+                    audit.write("Listing books from section " + sectionName, new Date());
                     break;
 
                 case 11:
@@ -329,6 +343,8 @@ public class Program {
 
                         library.addBookToSection(sectionName, title, noPages, publishingDate, author, publishingHouse, format);
                     }
+
+                    audit.write("Adding book " + title + " into section " + sectionName, new Date());
                     break;
 
                 case 12:
@@ -339,10 +355,12 @@ public class Program {
                     title = scanner.next();
 
                     library.removeBookFromSection(sectionName, title);
+                    audit.write("Removing book " + title + " into section " + sectionName, new Date());
                     break;
 
                 case 13:
                     library.listAllAuthors();
+                    audit.write("Listing authors", new Date());
                     break;
 
                 case 14:
@@ -365,6 +383,7 @@ public class Program {
                     String email = scanner.next();
 
                     library.addAuthor(authorName, birthdate, email);
+                    audit.write("Adding author " + authorName, new Date());
                     break;
 
                 case 15:
@@ -372,6 +391,7 @@ public class Program {
                     authorName = scanner.next();
 
                     library.removeAuthor(authorName);
+                    audit.write("Removing author " + authorName, new Date());
                     break;
 
                 case 16:
@@ -379,6 +399,7 @@ public class Program {
                     authorName = scanner.next();
 
                     library.listAllBooksFromAuthor(authorName);
+                    audit.write("Listing books from author " + authorName, new Date());
                     break;
 
                 case 17:
@@ -458,10 +479,13 @@ public class Program {
 
                         library.addBookFromAuthor(authorName, title, noPages, section, publishingHouse, format);
                     }
+
+                    audit.write("Adding book " + title + " from author " + authorName, new Date());
                     break;
 
                 case 18:
                     library.listAllReaders();
+                    audit.write("Listing readers", new Date());
                     break;
 
                 case 19:
@@ -487,6 +511,7 @@ public class Program {
                     String address = scanner.next();
 
                     library.addReader(readerName, birthdate, email, address);
+                    audit.write("Enrolling reader " + readerName, new Date());
                     break;
 
                 case 20:
@@ -494,6 +519,7 @@ public class Program {
                     readerName = scanner.next();
 
                     library.removeReader(readerName);
+                    audit.write("Removing reader " + readerName, new Date());
                     break;
 
                 case 21:
@@ -501,6 +527,7 @@ public class Program {
                     readerName = scanner.next();
 
                     library.listBooksLent(readerName);
+                    audit.write("Listing lent books from reader " + readerName, new Date());
                     break;
 
                 case 22:
@@ -511,6 +538,7 @@ public class Program {
                     title = scanner.next();
 
                     library.lendBook(readerName, title);
+                    audit.write("Lending book " + title + " by reader "+ readerName, new Date());
                     break;
 
                 case 23:
@@ -521,10 +549,12 @@ public class Program {
                     title = scanner.next();
 
                     library.returnBook(readerName, title);
+                    audit.write("Returning book " + title + " by reader " + readerName, new Date());
                     break;
 
                 case 24:
                     library.listAllPublishingHouses();
+                    audit.write("Listing publishing houses", new Date());
                     break;
 
                 case 25:
@@ -544,6 +574,7 @@ public class Program {
                     } while (!ok1);
 
                     library.addPublishingHouse(publishingHouseName, establishmentDate);
+                    audit.write("Adding publishing house " + publishingHouseName, new Date());
                     break;
 
                 case 26:
@@ -551,6 +582,7 @@ public class Program {
                     publishingHouseName = scanner.next();
 
                     library.removePublishingHouse(publishingHouseName);
+                    audit.write("Removing publishing house " + publishingHouseName, new Date());
                     break;
 
                 case 27:
@@ -558,6 +590,7 @@ public class Program {
                     publishingHouseName = scanner.next();
 
                     library.listBooksFromPublishingHouse(publishingHouseName);
+                    audit.write("Listing books from publishing house " + publishingHouseName, new Date());
                     break;
             }
 
