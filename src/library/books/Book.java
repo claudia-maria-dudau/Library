@@ -28,8 +28,14 @@ public abstract class Book {
         this.section = section;
         this.author = author;
         this.publishingHouse = publishingHouse;
+
         this.section.addBook(this);
         this.publishingHouse.addBook(this);
+        this.author.addBook(this);
+    }
+
+    public void setNoCopies(double noCopies) {
+        this.noCopies = noCopies;
     }
 
     @Override
@@ -41,9 +47,9 @@ public abstract class Book {
                 ", noPages=" + noPages +
                 ", noCopies=" + noCopies +
                 ", publishDate=" + publishDate +
-                ", section=" + section +
-                ", author=" + author +
-                ", publishingHouse='" + publishingHouse + '\'' +
+                ", section=" + section.getName() +
+                ", author=" + author.getName() +
+                ", publishingHouse='" + publishingHouse.getName() + '\'' +
                 '}';
     }
 

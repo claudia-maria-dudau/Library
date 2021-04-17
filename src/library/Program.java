@@ -24,6 +24,7 @@ public class Program {
         runProgram();
     }
 
+    // file reading
     public static void readAuthors(){
         for (String line : csv.read("authors.csv")){
             String[] authorDetails = line.split(", ");
@@ -134,6 +135,8 @@ public class Program {
         }
     }
 
+
+    // running program
     public static void runProgram(){
         Scanner scanner = new Scanner(System.in);
         int option;

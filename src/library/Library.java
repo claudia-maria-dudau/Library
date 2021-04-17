@@ -14,10 +14,6 @@ public class Library {
     private final TreeSet<Reader> readers = new TreeSet<>((r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
     private final TreeSet<PublishingHouse> publishingHouses = new TreeSet<>((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
 
-    public TreeSet<Author> getAuthors() {
-        return authors;
-    }
-
     @Override
     public String toString() {
         return "Library{" +
@@ -139,6 +135,7 @@ public class Library {
             this.books.remove(book);
             book.getSection().removeBook(book);
             book.getPublishingHouse().removeBook(book);
+            book.getAuthor().removeBook(book);
             System.out.println("The book " + book.getTitle() + " was removed from the library.");
         } else {
             System.out.println("The book doesn't exist in the library.");
@@ -415,15 +412,7 @@ public class Library {
 
     public void listAllBooksFromAuthor(Author author) {
         if (this.authors.contains(author)) {
-            List<Book> booksOfAuthor = this.books.stream().filter(b -> b.getAuthor().equals(author)).collect(Collectors.toList());
-            if (booksOfAuthor.isEmpty()) {
-                System.out.println("The author " + author.getName() + " presently has no books in the library.");
-            } else {
-                System.out.println("The author " + author.getName() + " has the following books in the library:");
-                for (Book book : booksOfAuthor) {
-                    System.out.println(book);
-                }
-            }
+            author.listBooks();
         } else {
             System.out.println("The author " + author.getName() + " doesn't exist in the library.");
         }
@@ -707,7 +696,7 @@ public class Library {
             System.out.println("The name doesn't match with any publishing house.");
         } else {
             for (PublishingHouse publishingHouse : publishingHousesToList) {
-                publishingHouse.listBooks();
+                this.listBooksFromPublishingHouse(publishingHouse);
             }
         }
     }

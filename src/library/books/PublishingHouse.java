@@ -19,6 +19,7 @@ public class PublishingHouse {
         return "PublishingHouse{" +
                 "name='" + name + '\'' +
                 ", establishmentDate=" + establishmentDate +
+                ", books=" + books +
                 '}';
     }
 
@@ -56,7 +57,6 @@ public class PublishingHouse {
         else{
             System.out.println("The book " + book.getTitle() + " doesn't exist from the publishing house " + this.name + ".");
         }
-
     }
 
     public void listBooks(){

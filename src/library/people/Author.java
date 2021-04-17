@@ -36,24 +36,36 @@ public class Author extends Person {
     }
 
     public Pbook publish(String title, int noPages, Section section, PublishingHouse publishingHouse) {
-        Pbook pbook = new Pbook(title, noPages, (java.sql.Date) new Date(), section, this, publishingHouse, 10);
-        this.booksWritten.add(pbook);
-        this.noBooksWritten++;
-        return pbook;
+        return new Pbook(title, noPages, new Date(), section, this, publishingHouse, 10);
     }
 
     public Ebook publish(String title, int noPages, Section section, PublishingHouse publishingHouse, String format) {
-        Ebook ebook = new Ebook(title, noPages, (java.sql.Date) new Date(),  section, this, publishingHouse, format);
-        this.booksWritten.add(ebook);
+        return new Ebook(title, noPages, new Date(),  section, this, publishingHouse, format);
+    }
+
+    public void addBook(Book book){
+        this.booksWritten.add(book);
         this.noBooksWritten++;
-        return ebook;
+    }
+
+    public void removeBook(Book book){
+        if (this.booksWritten.contains(book)){
+            this.booksWritten.get(this.booksWritten.indexOf(book)).setNoCopies(0);
+        }
+        else{
+            System.out.println("The book " + book.getTitle() + " doesn't exist from the author " + this.name + ".");
+        }
     }
 
     public void listBooks() {
-        System.out.println("The author " + this.name + " has published the following books:");
-        for (Book book :
-                this.booksWritten) {
-            System.out.println(book);
+        if (this.booksWritten.isEmpty()){
+            System.out.println("The author " + this.name + " hasn't published any book yet.");
+        } else {
+            System.out.println("The author " + this.name + " has published the following books:");
+            for (Book book :
+                    this.booksWritten) {
+                System.out.println(book);
+            }
         }
     }
 }

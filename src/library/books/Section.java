@@ -26,6 +26,7 @@ public class Section {
         return "Section{" +
                 "name='" + name + '\'' +
                 ", noBooks=" + noBooks +
+                ", books=" + books +
                 '}';
     }
 
