@@ -19,7 +19,9 @@ The scope of the platform is to manage the activities of a library and to keep t
 6. Program class
    - the main class where the user can choose which functionalities to use from the existing 27
 7. Audit class
-   - a singleton class which saves logs regarding the actions performed and their timestamps in the file log.csv
+   - a singleton class which saves logs regarding the actions performed and their timestamps into the file log.csv
+8. CSV class
+   - a singleton class which serves to read and write from/into csv files
 
 ## Available Functionalities
 1. Listing the details about the library
