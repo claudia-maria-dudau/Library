@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
 public class DB implements AutoCloseable {
-    private static DB instnce;
+    private static DB instance;
     private final Connection connection;
 
     private DB() throws SQLException {
@@ -64,17 +64,17 @@ public class DB implements AutoCloseable {
 
             if (notFoundLent) {
                 connection.createStatement()
-                        .execute("CEATE TABLE lent (book_id number(3) references books(book_id) on delete cascade, reader_id number(3) references readers(reader_id) on delete cascade, lent_date date)");
+                        .execute("CREATE TABLE lent (book_id number(3) references books(book_id) on delete cascade, reader_id number(3) references readers(reader_id) on delete cascade, lent_date date, returned bit default 0)");
             }
         }
     }
 
     public static DB getInstance() {
-        if (instnce == null) {
+        if (instance == null) {
             synchronized (DB.class) {
-                if (instnce == null) {
+                if (instance == null) {
                     try {
-                        instnce = new DB();
+                        instance = new DB();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -82,7 +82,7 @@ public class DB implements AutoCloseable {
             }
         }
 
-        return instnce;
+        return instance;
     }
 
     @Override
@@ -179,6 +179,97 @@ public class DB implements AutoCloseable {
 
         return reader;
     }
+
+    public Section getSection(String sectionName) {
+        // getting the section with the given ID from the database
+        Section section = null;
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM sections WHERE name = ?");
+            stmt.setString(1, sectionName);
+            ResultSet results = stmt.executeQuery();
+            section = new Section(results.getInt(1), results.getString(2), results.getInt(3));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return section;
+    }
+
+    public Author getAuthor(String authorName) {
+        // getting the author with the given ID from the database
+        Author author = null;
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM authors WHERE name = ?");
+            stmt.setString(1, authorName);
+            ResultSet results = stmt.executeQuery();
+            author = new Author(results.getInt(1), results.getString(2), results.getDate(3), results.getString(4), results.getInt(5));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return author;
+    }
+
+    public PublishingHouse getPublishingHouse(String publishingHouseName) {
+        // getting the publishing house with the given ID from the database
+        PublishingHouse publishingHouse = null;
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM publishingHouses WHERE name = ?");
+            stmt.setString(1, publishingHouseName);
+            ResultSet results = stmt.executeQuery();
+            publishingHouse = new PublishingHouse(results.getInt(1), results.getString(2), results.getDate(3));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return publishingHouse;
+    }
+
+    public Book getBook(String bookTitle){
+        // getting the book with the given ID from the database
+        Book book = null;
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM books WHERE title = ?");
+            stmt.setString(1, bookTitle);
+            ResultSet results = stmt.executeQuery();
+
+            Section section = getSection(results.getInt(8));
+            Author author = getAuthor(results.getInt(9));
+            PublishingHouse publishingHouse = getPublishingHouse(results.getInt(10));
+
+            if (results.getString(3).equalsIgnoreCase("pbook")) {
+                book = new Pbook(results.getInt(1), results.getString(2), results.getInt(4), results.getDate(6), section, author, publishingHouse, results.getInt(5));
+            } else {
+                book = new Ebook(results.getInt(1), results.getString(2), results.getInt(4), results.getDate(6), section, author, publishingHouse, results.getString(7));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return book;
+    }
+
+    public Reader getReader(String readerName){
+        // getting the reader with the given ID from the database
+        Reader reader = null;
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM readers WHERE name = ?");
+            stmt.setString(1, readerName);
+            ResultSet results = stmt.executeQuery();
+            reader = new Reader(results.getInt(1), results.getString(2), results.getDate(3), results.getString(4), results.getString(5), results.getInt(6));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reader;
+    }
+
+
 
     // books related actions
     public void createBook(Book book) {
@@ -310,9 +401,27 @@ public class DB implements AutoCloseable {
 
     }
 
+    public List<Book> getBooksFromSection(int sectionId) {
+        // getting all the books from a given section from th database
+        List<Book> books = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM books WHERE section_id = ?");
+            statement.setInt(1, sectionId);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                books.add(getBook(results.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
+
 
     // publishing houses related actions
-    public void createSection(PublishingHouse publishingHouse) {
+    public void createPublishingHouse(PublishingHouse publishingHouse) {
         // adding a publishing house into the database
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO publishingHouses (publishing_house_id, name, establishment_date) VALUES (?,?,?)");
@@ -364,6 +473,24 @@ public class DB implements AutoCloseable {
             e.printStackTrace();
         }
 
+    }
+
+    public List<Book> getBooksFromPublishingHouse(int publishingHouseId) {
+        // getting all the books published by a given publishing house from the database
+        List<Book> books = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM books WHERE publishing_house_id = ?");
+            statement.setInt(1, publishingHouseId);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                books.add(getBook(results.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
     }
 
 
@@ -423,6 +550,24 @@ public class DB implements AutoCloseable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Book> getBooksFromAuthor(int authorId) {
+        // getting all the books written by a given author from the database
+        List<Book> books = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM books WHERE author_id = ?");
+            statement.setInt(1, authorId);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                books.add(getBook(results.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
     }
 
 
@@ -486,8 +631,26 @@ public class DB implements AutoCloseable {
         }
     }
 
+    public List<Book> getBooksLentByReader(int readerId) {
+        // getting all the books lent a given reader from th database
+        List<Book> books = new ArrayList<>();
 
-    //book lenddings related actions
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM lent WHERE reader_id = ?");
+            statement.setInt(1, readerId);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                books.add(getBook(results.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
+
+
+    //book lendings related actions
     public void createLent(int bookId, int readerId, Date lentDate) {
         // adding a book lending into the database
         try {
@@ -501,15 +664,16 @@ public class DB implements AutoCloseable {
         }
     }
 
-    public Map<Date, SimpleEntry<Book, Reader>> getLending() {
+    public Map<Date, SimpleEntry<SimpleEntry<Book, Reader>, Boolean>> getLending() {
         // getting all the book lendings from the library
-        Map<Date, SimpleEntry<Book, Reader>> lendings =  new HashMap<>();
+        Map<Date, SimpleEntry<SimpleEntry<Book, Reader>, Boolean>> lendings =  new HashMap<>();
 
         try {
             ResultSet results = connection.createStatement().executeQuery("SELECT * FROM lent");
             while(results.next()){
                 SimpleEntry entry = new SimpleEntry(getBook(results.getInt(1)), getReader(results.getInt(2)));
-                lendings.put(results.getDate(3), entry);
+                SimpleEntry entry1 = new SimpleEntry(entry, results.getByte(4));
+                lendings.put(results.getDate(3), entry1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -518,16 +682,17 @@ public class DB implements AutoCloseable {
         return lendings;
     }
 
-    public void updateLent(int bookId, int readerId, Date lentDate){
+    public void updateLent(int bookId, int readerId, Date lentDate, Boolean returned){
         // updating a book lending from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE lent SET lent_date = ? WHERE book_id = ? AND reader_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE lent SET lent_date = ? returned = ? WHERE book_id = ? AND reader_id = ?");
             statement.setDate(1, lentDate);
+            statement.setByte(2, (byte) (returned ? 1 : 0));
             statement.setInt(2, bookId);
             statement.setInt(3, readerId);
             statement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -538,8 +703,8 @@ public class DB implements AutoCloseable {
             statement.setInt(1, bookId);
             statement.setInt(2, readerId);
             statement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

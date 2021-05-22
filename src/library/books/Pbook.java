@@ -24,6 +24,7 @@ public class Pbook extends Book {
         if (this.isAvailable()) {
             System.out.println("The book " + this.title + " was lent.");
             this.noCopies--;
+            db.updateBook(this);
         } else {
             System.out.println("The book is not available at the moment. Please come back later.");
         }
@@ -33,22 +34,27 @@ public class Pbook extends Book {
     public void returnBook() {
         System.out.println("The book " + this.title + " was returned.");
         this.noCopies++;
+        db.updateBook(this);
     }
 
     public void addCopy() {
         this.noCopies++;
+        db.updateBook(this);
     }
 
     public void addCopy(int nr) {
         this.noCopies += nr;
+        db.updateBook(this);
     }
 
     public void lostCopy() {
         this.noCopies--;
+        db.updateBook(this);
     }
 
     public void lostCopy(int nr){
         this.noCopies -=  nr;
+        db.updateBook(this);
     }
 
 }

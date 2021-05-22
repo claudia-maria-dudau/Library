@@ -1,6 +1,9 @@
 package library.books;
 
+import library.DB;
+
 import java.util.Comparator;
+import java.util.List;
 import java.util.TreeSet;
 
 public class Section {
@@ -9,6 +12,7 @@ public class Section {
     private final String name;
     private int noBooks;
     private final TreeSet<Book> books = new TreeSet<>(Comparator.comparing(Book::getTitle));
+    private DB db = DB.getInstance();
 
     public Section(String name){
         this.id = ++noSections;
@@ -77,12 +81,12 @@ public class Section {
     }
 
     public void listBooks() {
-        if (this.books.isEmpty()){
+        List<Book> books = db.getBooksFromSection(this.id);
+        if (books.isEmpty()){
             System.out.println("There are no books in the section " + this.name + " at the moment.");
         } else {
             System.out.println("The books from the publishing house " + this.name + " are the following:\n");
-            for (Book book :
-                    this.books) {
+            for (Book book : books) {
                 System.out.println(book);
             }
         }

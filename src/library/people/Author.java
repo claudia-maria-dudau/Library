@@ -1,14 +1,17 @@
 package library.people;
 
+import library.DB;
 import library.books.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class Author extends Person {
     private int noBooksWritten;
     private final ArrayList<Book> booksWritten = new ArrayList<>();
+    private DB db = DB.getInstance();
 
     public Author(String name, Date birthdate, String email) {
         super(name, birthdate, email);
@@ -67,12 +70,12 @@ public class Author extends Person {
     }
 
     public void listBooks() {
-        if (this.booksWritten.isEmpty()){
+        List<Book> booksWritten = db.getBooksFromAuthor(this.id);
+        if (booksWritten.isEmpty()){
             System.out.println("The author " + this.name + " hasn't published any book yet.");
         } else {
             System.out.println("The author " + this.name + " has published the following books:");
-            for (Book book :
-                    this.booksWritten) {
+            for (Book book : booksWritten) {
                 System.out.println(book);
             }
         }

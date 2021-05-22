@@ -1,7 +1,10 @@
 package library.books;
 
+import library.DB;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class PublishingHouse {
@@ -10,6 +13,7 @@ public class PublishingHouse {
     private final String name;
     private final Date establishmentDate;
     private final ArrayList<Book> books = new ArrayList<>();
+    private DB db = DB.getInstance();
 
     public PublishingHouse(String name, Date establishmentDate) {
         this.id = ++noPublishingHouses;
@@ -77,12 +81,12 @@ public class PublishingHouse {
     }
 
     public void listBooks(){
-        if (this.books.isEmpty()){
+        List<Book> books = db.getBooksFromPublishingHouse(this.id);
+        if (books.isEmpty()){
             System.out.println("The publishing house " + this.name + " hasn't published any book yet.");
         } else {
             System.out.println("The publishing house " + this.name + " has published the following books:\n");
-            for (Book book :
-                    this.books) {
+            for (Book book : books) {
                 System.out.println(book);
             }
         }

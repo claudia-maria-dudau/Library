@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CSV {
-    public static CSV instance = null;
+    private static CSV instance = null;
 
     private CSV(){}
 

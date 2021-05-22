@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Date;
 
 public class Audit {
-    public static Audit instance = null;
+    private static Audit instance = null;
 
     private Audit() {}
 

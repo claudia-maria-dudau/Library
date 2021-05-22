@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class Program {
-    private static final Library library = new Library();
+    private static final Library library = Library.getInstance();
     private static final Audit audit = Audit.getInstance();
     private static final CSV csv = CSV.getInstance();
 

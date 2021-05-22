@@ -1,5 +1,6 @@
 package library.books;
 
+import library.DB;
 import library.people.Author;
 
 import java.util.Date;
@@ -17,6 +18,7 @@ public abstract class Book {
     protected Section section;
     protected Author author;
     protected PublishingHouse publishingHouse;
+    protected DB db = DB.getInstance();
 
     public abstract void lendBook();
     public abstract void returnBook();
@@ -47,6 +49,7 @@ public abstract class Book {
 
     public void setNoCopies(double noCopies) {
         this.noCopies = noCopies;
+        db.updateBook(this);
     }
 
     @Override
