@@ -15,6 +15,12 @@ public class Reader extends Person {
         this.address = address;
     }
 
+    public Reader(int id, String name, Date birthDate, String mail, String address, int noBooksLent) {
+        super(id, name, birthDate, mail);
+        this.address = address;
+        this.noBooksLent = noBooksLent;
+    }
+
     @Override
     public String toString() {
         return "Reader{" +
@@ -25,6 +31,14 @@ public class Reader extends Person {
                 ", birthDate=" + birthDate +
                 ", mail='" + mail + '\'' +
                 '}';
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getNoBooksLent() {
+        return noBooksLent;
     }
 
     public ArrayList<Book> getBooksLent() {

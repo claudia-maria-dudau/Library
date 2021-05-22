@@ -9,6 +9,14 @@ public class Pbook extends Book {
         super(title, noPages, publishDate, section, author, publishingHouse);
         this.type = "pbook";
         this.noCopies = noCopies;
+        this.format = "physical";
+    }
+
+    public Pbook(int id, String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse, int noCopies) {
+        super(id, title, noPages, publishDate, section, author, publishingHouse);
+        this.type = "pbook";
+        this.noCopies = noCopies;
+        this.format = "physical";
     }
 
     @Override

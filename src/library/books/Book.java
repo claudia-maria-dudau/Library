@@ -13,6 +13,7 @@ public abstract class Book {
     protected int noPages;
     protected double noCopies;
     protected Date publishDate;
+    protected String format;
     protected Section section;
     protected Author author;
     protected PublishingHouse publishingHouse;
@@ -32,6 +33,16 @@ public abstract class Book {
         this.section.addBook(this);
         this.publishingHouse.addBook(this);
         this.author.addBook(this);
+    }
+
+    public Book(int id, String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse){
+        this.id = id;
+        this.title = title;
+        this.noPages = noPages;
+        this.publishDate = publishDate;
+        this.section = section;
+        this.author = author;
+        this.publishingHouse = publishingHouse;
     }
 
     public void setNoCopies(double noCopies) {
@@ -68,24 +79,44 @@ public abstract class Book {
         return Objects.hash(getTitle(), type, author);
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
 
-    public Author getAuthor() {
-        return author;
+    public String getType() {
+        return type;
+    }
+
+    public int getNoPages() {
+        return noPages;
+    }
+
+    public double getNoCopies() {
+        return noCopies;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public String getFormat() {
+        return format;
     }
 
     public Section getSection() {
         return section;
     }
 
-    public PublishingHouse getPublishingHouse() {
-        return publishingHouse;
+    public Author getAuthor() {
+        return author;
     }
 
-    public double getNoCopies() {
-        return noCopies;
+    public PublishingHouse getPublishingHouse() {
+        return publishingHouse;
     }
 
     public boolean isAvailable(){

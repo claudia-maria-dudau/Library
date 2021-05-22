@@ -13,7 +13,11 @@ public class CSV {
 
     public static CSV getInstance(){
         if (instance == null){
-            instance = new CSV();
+            synchronized (CSV.class) {
+                if (instance == null) {
+                    instance = new CSV();
+                }
+            }
         }
 
         return instance;

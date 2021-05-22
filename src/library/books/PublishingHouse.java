@@ -5,11 +5,20 @@ import java.util.Date;
 import java.util.Objects;
 
 public class PublishingHouse {
+    static int noPublishingHouses;
+    private int id;
     private final String name;
     private final Date establishmentDate;
     private final ArrayList<Book> books = new ArrayList<>();
 
     public PublishingHouse(String name, Date establishmentDate) {
+        this.id = ++noPublishingHouses;
+        this.name = name;
+        this.establishmentDate = establishmentDate;
+    }
+
+    public PublishingHouse(int id, String name, Date establishmentDate) {
+        this.id = id;
         this.name = name;
         this.establishmentDate = establishmentDate;
     }
@@ -37,8 +46,16 @@ public class PublishingHouse {
         return Objects.hash(name, establishmentDate);
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public Date getEstablishmentDate() {
+        return establishmentDate;
     }
 
     public void addBook(Book book) {

@@ -4,11 +4,14 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 public class Section {
+    static int noSections;
+    private int id;
     private final String name;
     private int noBooks;
     private final TreeSet<Book> books = new TreeSet<>(Comparator.comparing(Book::getTitle));
 
     public Section(String name){
+        this.id = ++noSections;
         this.name = name;
         this.noBooks = 0;
     }
@@ -21,6 +24,12 @@ public class Section {
         }
     }
 
+    public Section(int id, String name, int noBooks){
+        this.id = id;
+        this.name = name;
+        this.noBooks = noBooks;
+    }
+
     @Override
     public String toString() {
         return "Section{" +
@@ -30,8 +39,16 @@ public class Section {
                 '}';
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public int getNoBooks() {
+        return noBooks;
     }
 
     public TreeSet<Book> getBooks() {

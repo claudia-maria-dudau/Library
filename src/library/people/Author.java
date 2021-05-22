@@ -14,6 +14,11 @@ public class Author extends Person {
         super(name, birthdate, email);
     }
 
+    public Author(int id, String name, Date birthdate, String email, int noBooksWritten) {
+        super(id, name, birthdate, email);
+        this.noBooksWritten = noBooksWritten;
+    }
+
     public Author(String name, Date birthdate, String mail, Book[] books) {
         this(name, birthdate, mail);
         Collections.addAll(this.booksWritten, books);
@@ -29,6 +34,10 @@ public class Author extends Person {
                 ", birthDate=" + birthDate +
                 ", mail='" + mail + '\'' +
                 '}';
+    }
+
+    public int getNoBooksWritten() {
+        return noBooksWritten;
     }
 
     public ArrayList<Book> getBooksWritten() {
