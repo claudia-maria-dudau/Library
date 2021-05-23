@@ -37,7 +37,8 @@ public class Section {
     @Override
     public String toString() {
         return "Section{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", noBooks=" + noBooks +
                 ", books=" + books +
                 '}';

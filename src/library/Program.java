@@ -4,6 +4,9 @@ import library.books.PublishingHouse;
 import library.books.Section;
 import library.people.Author;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +16,7 @@ public class Program {
     private static final Library library = Library.getInstance();
     private static final Audit audit = Audit.getInstance();
     private static final CSV csv = CSV.getInstance();
+    private static final DB db = DB.getInstance();
 
     public static void main(String[] args) {
         readAuthors();

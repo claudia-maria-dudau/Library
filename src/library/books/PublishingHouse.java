@@ -30,7 +30,8 @@ public class PublishingHouse {
     @Override
     public String toString() {
         return "PublishingHouse{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", establishmentDate=" + establishmentDate +
                 ", books=" + books +
                 '}';

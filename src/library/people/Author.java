@@ -33,6 +33,7 @@ public class Author extends Person {
         return "Author{" +
                 "noBooksWritten=" + noBooksWritten +
                 ", booksWritten=" + booksWritten +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", birthDate=" + birthDate +
                 ", mail='" + mail + '\'' +

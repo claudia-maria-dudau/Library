@@ -30,6 +30,7 @@ public class Reader extends Person {
                 "address='" + address + '\'' +
                 ", noBooksLent=" + noBooksLent +
                 ", booksLent=" + booksLent +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", birthDate=" + birthDate +
                 ", mail='" + mail + '\'' +
@@ -71,6 +72,7 @@ public class Reader extends Person {
         this.noBooksLent--;
         this.booksLent.remove(book);
         db.updateReader(this);
+        db.updateLent(book.getId(), this.id, true);
     }
 
     public void listBooksLent() {

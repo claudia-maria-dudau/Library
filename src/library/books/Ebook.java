@@ -9,14 +9,14 @@ public class Ebook  extends Book{
         super(title, noPages, publishDate, section, author, publishingHouse);
         this.format = format;
         this.type = "ebook";
-        this.noCopies = Double.POSITIVE_INFINITY;
+        this.noCopies = Integer.MAX_VALUE;
     }
 
     public Ebook(int id, String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse, String format) {
         super(id, title, noPages, publishDate, section, author, publishingHouse);
         this.format = format;
         this.type = "ebook";
-        this.noCopies = Double.POSITIVE_INFINITY;
+        this.noCopies = Integer.MAX_VALUE;
     }
 
     @Override
