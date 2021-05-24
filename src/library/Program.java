@@ -4,6 +4,7 @@ import library.books.PublishingHouse;
 import library.books.Section;
 import library.people.Author;
 
+import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ public class Program {
     private static final Audit audit = Audit.getInstance();
     private static final CSV csv = CSV.getInstance();
     private static final DB db = DB.getInstance();
+    private static GUI gui;
 
     public static void main(String[] args) {
         readAuthors();
@@ -25,7 +27,9 @@ public class Program {
         readBooks();
         readReaders();
 
-        runProgram();
+        gui = GUI.getInstance();
+
+        // runProgram();
     }
 
     // file reading

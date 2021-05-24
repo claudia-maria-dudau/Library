@@ -141,7 +141,7 @@ public class DB implements AutoCloseable {
     public Book getBook(String bookTitle) {
         // getting the book with the given ID from the database
         try {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM books WHERE title like ?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM books WHERE title = ?");
             stmt.setString(1, bookTitle);
             ResultSet results = stmt.executeQuery();
 
