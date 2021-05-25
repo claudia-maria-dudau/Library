@@ -1,6 +1,6 @@
 package library.people;
 
-import library.DB;
+import library.database.DB;
 import library.books.*;
 
 import java.util.ArrayList;
@@ -63,7 +63,8 @@ public class Author extends Person {
 
     public void removeBook(Book book){
         if (this.booksWritten.contains(book)){
-            this.booksWritten.get(this.booksWritten.indexOf(book)).setNoCopies(0);
+            this.booksWritten.remove(book);
+            this.noBooksWritten--;
         }
         else{
             System.out.println("The book " + book.getTitle() + " doesn't exist from the author " + this.name + ".");

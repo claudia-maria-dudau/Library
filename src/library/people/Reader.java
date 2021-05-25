@@ -1,6 +1,6 @@
 package library.people;
 
-import library.DB;
+import library.database.DB;
 import library.books.Book;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package library;
+package library.database;
 
 import library.books.*;
 import library.people.Author;
@@ -55,7 +55,7 @@ public class DB implements AutoCloseable {
 
         if (notFoundBooks) {
             connection.createStatement()
-                    .execute("CREATE TABLE books (book_id int primary key, title varchar(100), type varchar(20), no_pages int, no_copies double, publish_date date, format varchar(20), section_id int references sections(section_id) on delete cascade, author_id int references authors(author_id) on delete cascade, publishing_house_id int references publishingHouses(publishing_house_id) on delete cascade)");
+                    .execute("CREATE TABLE books (book_id int primary key, title varchar(100), book_type varchar(20), no_pages int, no_copies double, publish_date date, format varchar(20), section_id int references sections(section_id) on delete cascade, author_id int references authors(author_id) on delete cascade, publishing_house_id int references publishingHouses(publishing_house_id) on delete cascade)");
         }
 
         if (notFoundReaders) {
@@ -100,7 +100,7 @@ public class DB implements AutoCloseable {
     public void createBook(Book book) {
         // adding a book into the database
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO books (book_id, title, type, no_pages, no_copies, publish_date, format, section_id, author_id, publishing_house_id) VALUES (?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO books (book_id, title, book_type, no_pages, no_copies, publish_date, format, section_id, author_id, publishing_house_id) VALUES (?,?,?,?,?,?,?,?,?,?)");
             statement.setInt(1, book.getId());
             statement.setString(2, book.getTitle());
             statement.setString(3, book.getType());
@@ -178,7 +178,7 @@ public class DB implements AutoCloseable {
     public void updateBook(Book book) {
         // updating a book from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE books SET title = ? type = ? no_pages = ? no_copies = ? publish_date = ? format = ? section_id = ? author_id = ? publishing_house_id = ? WHERE book_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE books SET title = ? book_type = ? no_pages = ? no_copies = ? publish_date = ? format = ? section_id = ? author_id = ? publishing_house_id = ? WHERE book_id = ?");
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getType());
             statement.setInt(3, book.getNoPages());

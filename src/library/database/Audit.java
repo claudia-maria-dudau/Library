@@ -1,4 +1,4 @@
-package library;
+package library.database;
 
 import java.io.File;
 import java.io.FileWriter;

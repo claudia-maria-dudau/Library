@@ -1,6 +1,6 @@
 package library.books;
 
-import library.DB;
+import library.database.DB;
 
 import java.util.Comparator;
 import java.util.List;

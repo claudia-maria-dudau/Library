@@ -1,6 +1,7 @@
 package library;
 
 import library.books.*;
+import library.database.DB;
 import library.people.Author;
 import library.people.Reader;
 
@@ -9,17 +10,22 @@ import java.util.stream.Collectors;
 
 public class Library {
     private static Library instance;
-    private final TreeSet<Book> books = new TreeSet<>(Comparator.comparing(Book::getTitle));
+    private final TreeSet<Book> books = new TreeSet<>((b1, b2) -> (b1.getTitle().compareToIgnoreCase(b2.getTitle()) +
+            b1.getAuthor().getName().compareToIgnoreCase(b2.getAuthor().getName()) +
+            b1.getPublishDate().toString().compareToIgnoreCase(b2.getPublishDate().toString()) +
+            b1.getPublishingHouse().getName().compareToIgnoreCase(b2.getPublishingHouse().getName()) +
+            b1.getFormat().compareToIgnoreCase(b2.getFormat())));
     private final TreeSet<Section> sections = new TreeSet<>((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
     private final TreeSet<Author> authors = new TreeSet<>((a1, a2) -> a1.getName().compareToIgnoreCase(a2.getName()));
     private final TreeSet<Reader> readers = new TreeSet<>((r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
     private final TreeSet<PublishingHouse> publishingHouses = new TreeSet<>((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
     private final DB db = DB.getInstance();
-    
-    private Library() {}
+
+    private Library() {
+    }
 
     public static Library getInstance() {
-        if (instance == null){
+        if (instance == null) {
             synchronized (Library.class) {
                 if (instance == null) {
                     instance = new Library();
@@ -91,37 +97,37 @@ public class Library {
         System.out.println("27. Listing all the books from a publishing house");
     }
 
-    synchronized public Section getSection(String name) throws Exception{
-        for (Section section : this.sections){
-            if (section.getName().equalsIgnoreCase(name)){
+    synchronized public Section getSection(String name) {
+        for (Section section : this.sections) {
+            if (section.getName().equalsIgnoreCase(name)) {
                 return section;
             }
         }
 
-        throw new Exception("The name doesn't match with any existing section.");
+        return  null;
     }
 
-    synchronized public Author getAuthor(String name) throws Exception{
-        for (Author author : this.authors){
-            if (author.getName().equalsIgnoreCase(name)){
+    synchronized public Author getAuthor(String name) {
+        for (Author author : this.authors) {
+            if (author.getName().equalsIgnoreCase(name)) {
                 return author;
             }
         }
 
-        throw new Exception("The name doesn't match with any existing author.");
+        return null;
     }
 
-    synchronized public PublishingHouse getPublishingHouse(String name) throws  Exception{
-        for (PublishingHouse publishingHouse: this.publishingHouses){
-            if (publishingHouse.getName().equalsIgnoreCase(name)){
+    synchronized public PublishingHouse getPublishingHouse(String name) {
+        for (PublishingHouse publishingHouse : this.publishingHouses) {
+            if (publishingHouse.getName().equalsIgnoreCase(name)) {
                 return publishingHouse;
             }
         }
 
-        throw new Exception("The name doesn't match with any existing publishing house.");
+        return  null;
     }
 
-    synchronized public void details(){
+    synchronized public void details() {
         System.out.println("The library currently has:");
         System.out.println("Books: " + this.books.size());
         System.out.println("Sections: " + this.sections.size());
@@ -134,7 +140,7 @@ public class Library {
     // books related actions
     synchronized public void listBooks() {
         List<Book> books = db.getBooks();
-        if (this.books.isEmpty()){
+        if (this.books.isEmpty()) {
             System.out.println("There are no books in the library at the moment.");
         } else {
             System.out.println("The books of the library:");
@@ -146,7 +152,7 @@ public class Library {
 
     synchronized public void addBook(Book book) {
         Book bookDB = db.getBook(book.getId());
-        if (this.books.contains(book) && bookDB != null) {
+        if (this.books.contains(book) || bookDB != null) {
             System.out.println("The book is already in the library.");
         } else {
             db.createBook(book);
@@ -170,7 +176,7 @@ public class Library {
 
     synchronized public void removeBook(Book book) {
         Book bookDB = db.getBook(book.getId());
-        if (this.books.contains(book) && bookDB!= null) {
+        if (this.books.contains(book) || bookDB != null) {
             db.deleteBook(book.getId());
             this.books.remove(book);
             book.getSection().removeBook(book);
@@ -185,7 +191,7 @@ public class Library {
     synchronized public void removeBook(String title) {
         List<Book> booksToRemove = this.books.stream().filter(b -> title.equals(b.getTitle())).collect(Collectors.toList());
         Book bookDB = db.getBook(title);
-        if (booksToRemove.isEmpty() && bookDB != null) {
+        if (booksToRemove.isEmpty() || bookDB != null) {
             System.out.println("The title doesn't match with any books in the library.");
         } else {
             for (Book book : booksToRemove) {
@@ -246,14 +252,14 @@ public class Library {
         }
     }
 
-    synchronized public void updateBook(Book book){
+    synchronized public void updateBook(Book book) {
         Book bookDB = db.getBook(book.getId());
         if (!this.books.contains(book) && bookDB == null) {
             System.out.println("The book doesn't exist in the library.");
         } else {
             db.updateBook(book);
             List<Book> booksToUpdate = this.books.stream().filter(b -> b.getId() == book.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-            for (Book book1 : booksToUpdate){
+            for (Book book1 : booksToUpdate) {
                 this.books.remove(book1);
             }
             this.books.add(book);
@@ -275,7 +281,7 @@ public class Library {
     // sections related actions
     synchronized public void listSections() {
         List<Section> sections = db.getSections();
-        if (this.sections.isEmpty()){
+        if (this.sections.isEmpty()) {
             System.out.println("There are no sections in the library at the moment.");
         } else {
             System.out.println("The sections of the library:");
@@ -287,7 +293,7 @@ public class Library {
 
     synchronized public void addSection(Section section) {
         Section sectionDB = db.getSection(section.getId());
-        if (this.sections.contains(section) && sectionDB != null) {
+        if (this.sections.contains(section) || sectionDB != null) {
             System.out.println("The section already exists.");
         } else {
             db.createSection(section);
@@ -309,7 +315,7 @@ public class Library {
 
     synchronized public void removeSection(Section section) {
         Section sectionDB = db.getSection(section.getId());
-        if (this.sections.contains(section) && sectionDB != null) {
+        if (this.sections.contains(section) || sectionDB != null) {
             db.deleteSection(section.getId());
             this.sections.remove(section);
             for (Book book : section.getBooks()) {
@@ -335,7 +341,7 @@ public class Library {
 
     synchronized public void listBooksFromSection(Section section) {
         Section sectionDB = db.getSection(section.getId());
-        if (this.sections.contains(section) && sectionDB != null) {
+        if (this.sections.contains(section) || sectionDB != null) {
             section.listBooks();
         } else {
             System.out.println("The section doesn't exist in the library");
@@ -379,7 +385,7 @@ public class Library {
 
     synchronized public void addBookToSection(Section section, String title, int noPages, Date publishDate, Author author, PublishingHouse publishingHouse, String format) {
         Section sectionDB = db.getSection(section.getName());
-        if (this.sections.contains(section) && sectionDB != null) {
+        if (this.sections.contains(section) || sectionDB != null) {
             Ebook book = new Ebook(title, noPages, publishDate, section, author, publishingHouse, format);
             this.addBook(book);
         } else {
@@ -402,7 +408,7 @@ public class Library {
 
     synchronized public void removeBookFromSection(Section section, String title) {
         Section sectionDB = db.getSection(section.getId());
-        if (this.sections.contains(section) && sectionDB != null) {
+        if (this.sections.contains(section) || sectionDB != null) {
             this.removeBook(title);
         } else {
             System.out.println("The section " + section.getName() + " doesn't exist.");
@@ -421,7 +427,7 @@ public class Library {
 
     synchronized public void removeBookFromSection(Section section, Book book) {
         Section sectionDB = db.getSection(section.getId());
-        if (this.sections.contains(section) && sectionDB != null) {
+        if (this.sections.contains(section) || sectionDB != null) {
             this.removeBook(book);
         } else {
             System.out.println("The section " + section.getName() + " doesn't exist.");
@@ -444,8 +450,8 @@ public class Library {
             System.out.println("The section doesn't exist in the library.");
         } else {
             db.updateSection(section);
-            List<Section> sectionsToUpdate = this.sections.stream().filter(b -> b.getId() == section.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-            for (Section section1 : sectionsToUpdate){
+            List<Section> sectionsToUpdate = this.sections.stream().filter(b -> b.getId() == section.getId()).collect(Collectors.toList());
+            for (Section section1 : sectionsToUpdate) {
                 this.sections.remove(section1);
             }
             this.sections.add(section);
@@ -467,7 +473,7 @@ public class Library {
     // authors related actions
     synchronized public void listAllAuthors() {
         List<Author> authors = db.getAuthors();
-        if (this.authors.isEmpty()){
+        if (this.authors.isEmpty()) {
             System.out.println("There are no authors in the library at the moment.");
         } else {
             System.out.println("The authors in the library:");
@@ -477,9 +483,9 @@ public class Library {
         }
     }
 
-    synchronized public void addAuthor(Author author){
+    synchronized public void addAuthor(Author author) {
         Author authorDB = db.getAuthor(author.getId());
-        if (this.authors.contains(author) && authorDB != null) {
+        if (this.authors.contains(author) || authorDB != null) {
             System.out.println("The author already exists in the library.");
         } else {
             db.createAuthor(author);
@@ -501,7 +507,7 @@ public class Library {
 
     synchronized public void removeAuthor(Author author) {
         Author authorDB = db.getAuthor(author.getId());
-        if (this.authors.contains(author) && authorDB != null) {
+        if (this.authors.contains(author) || authorDB != null) {
             db.deleteAuthor(author.getId());
             this.authors.remove(author);
             for (Book book : author.getBooksWritten()) {
@@ -527,14 +533,14 @@ public class Library {
 
     synchronized public void listAllBooksFromAuthor(Author author) {
         Author authorDB = db.getAuthor(author.getId());
-        if (this.authors.contains(author) && authorDB != null) {
+        if (this.authors.contains(author) || authorDB != null) {
             author.listBooks();
         } else {
             System.out.println("The author " + author.getName() + " doesn't exist in the library.");
         }
     }
 
-    synchronized public void listAllBooksFromAuthor(String name){
+    synchronized public void listAllBooksFromAuthor(String name) {
         List<Author> authorsToList = this.authors.stream().filter(a -> name.equalsIgnoreCase(a.getName())).collect(Collectors.toList());
         Author authorDB = db.getAuthor(name);
         if (authorsToList.isEmpty() && authorDB == null) {
@@ -546,9 +552,9 @@ public class Library {
         }
     }
 
-    synchronized public void addBookFromAuthor(Author author, String title, int noPages, Section section, PublishingHouse publishingHouse){
+    synchronized public void addBookFromAuthor(Author author, String title, int noPages, Section section, PublishingHouse publishingHouse) {
         Author authorDB = db.getAuthor(author.getId());
-        if (this.authors.contains(author) && authorDB != null){
+        if (this.authors.contains(author) || authorDB != null) {
             Pbook pbook = author.publish(title, noPages, section, publishingHouse);
             this.addBook(pbook);
         } else {
@@ -556,11 +562,11 @@ public class Library {
         }
     }
 
-    synchronized public void addBookFromAuthor(String name, String title, int noPages, Section section, PublishingHouse publishingHouse){
+    synchronized public void addBookFromAuthor(String name, String title, int noPages, Section section, PublishingHouse publishingHouse) {
         List<Author> authorsToAddBook = this.authors.stream().filter(a -> a.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Author authorDB = db.getAuthor(name);
-        if (!authorsToAddBook.isEmpty() && authorDB != null){
-            for (Author author : authorsToAddBook){
+        if (!authorsToAddBook.isEmpty() || authorDB != null) {
+            for (Author author : authorsToAddBook) {
                 this.addBookFromAuthor(author, title, noPages, section, publishingHouse);
             }
         } else {
@@ -568,9 +574,9 @@ public class Library {
         }
     }
 
-    synchronized public void addBookFromAuthor(Author author, String title, int noPages, Section section, PublishingHouse publishingHouse, String format){
+    synchronized public void addBookFromAuthor(Author author, String title, int noPages, Section section, PublishingHouse publishingHouse, String format) {
         Author authorDB = db.getAuthor(author.getId());
-        if (this.authors.contains(author) && authorDB != null){
+        if (this.authors.contains(author) || authorDB != null) {
             Ebook ebook = author.publish(title, noPages, section, publishingHouse, format);
             this.addBook(ebook);
         } else {
@@ -578,11 +584,11 @@ public class Library {
         }
     }
 
-    synchronized public void addBookFromAuthor(String name, String title, int noPages, Section section, PublishingHouse publishingHouse, String format){
+    synchronized public void addBookFromAuthor(String name, String title, int noPages, Section section, PublishingHouse publishingHouse, String format) {
         List<Author> authorsToAddBook = this.authors.stream().filter(a -> a.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Author authorDB = db.getAuthor(name);
-        if (!authorsToAddBook.isEmpty() && authorDB != null){
-            for (Author author : authorsToAddBook){
+        if (!authorsToAddBook.isEmpty() || authorDB != null) {
+            for (Author author : authorsToAddBook) {
                 this.addBookFromAuthor(author, title, noPages, section, publishingHouse, format);
             }
         } else {
@@ -590,14 +596,14 @@ public class Library {
         }
     }
 
-    synchronized public void updateAuthor(Author author){
+    synchronized public void updateAuthor(Author author) {
         Author authorDB = db.getAuthor(author.getId());
         if (!this.authors.contains(author) && authorDB == null) {
             System.out.println("The author doesn't exists in the library.");
         } else {
             db.updateAuthor(author);
-            List<Author> authorsToUpdate = this.authors.stream().filter(b -> b.getId() == author.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-            for (Author author1 : authorsToUpdate){
+            List<Author> authorsToUpdate = this.authors.stream().filter(b -> b.getId() == author.getId()).collect(Collectors.toList());
+            for (Author author1 : authorsToUpdate) {
                 this.sections.remove(author1);
             }
             this.authors.add(author);
@@ -617,9 +623,9 @@ public class Library {
 
 
     // readers related actions
-    synchronized public void listAllReaders(){
+    synchronized public void listAllReaders() {
         List<Reader> readers = db.getReaders();
-        if (this.readers.isEmpty()){
+        if (this.readers.isEmpty()) {
             System.out.println("There are no readers enrolled into the library at the moment.");
         } else {
             System.out.println("The readers enrolled into the library:");
@@ -629,9 +635,9 @@ public class Library {
         }
     }
 
-    synchronized public void addReader(Reader reader){
+    synchronized public void addReader(Reader reader) {
         Reader readerDB = db.getReader(reader.getId());
-        if (this.readers.contains(reader) && readerDB != null) {
+        if (this.readers.contains(reader) || readerDB != null) {
             System.out.println("The reader already exists in the library.");
         } else {
             db.createReader(reader);
@@ -640,14 +646,14 @@ public class Library {
         }
     }
 
-    synchronized public void addReader(String name, java.util.Date birthDate, String email, String address){
+    synchronized public void addReader(String name, java.util.Date birthDate, String email, String address) {
         Reader reader = new Reader(name, birthDate, email, address);
         this.addReader(reader);
     }
 
-    synchronized public void removeReader(Reader reader){
+    synchronized public void removeReader(Reader reader) {
         Reader readerDB = db.getReader(reader.getId());
-        if (this.readers.contains(reader) && readerDB != null){
+        if (this.readers.contains(reader) || readerDB != null) {
             db.deleteReader(reader.getId());
             this.readers.remove(reader);
             System.out.println("The reader was successfully removed from the library.");
@@ -656,11 +662,11 @@ public class Library {
         }
     }
 
-    synchronized public void removeReader(String name){
+    synchronized public void removeReader(String name) {
         List<Reader> readersToRemove = this.readers.stream().filter(r -> r.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Reader readerDB = db.getReader(name);
-        if (!readersToRemove.isEmpty() && readerDB != null){
-            for (Reader reader : readersToRemove){
+        if (!readersToRemove.isEmpty() || readerDB != null) {
+            for (Reader reader : readersToRemove) {
                 this.removeReader(reader);
             }
         } else {
@@ -668,10 +674,10 @@ public class Library {
         }
     }
 
-    synchronized public void listBooksLent(Reader reader){
+    synchronized public void listBooksLent(Reader reader) {
         Reader readerDB = db.getReader(reader.getId());
-        if (this.readers.contains(reader) && readerDB == null){
-            if (reader.getBooksLent().isEmpty()){
+        if (this.readers.contains(reader) && readerDB == null) {
+            if (reader.getBooksLent().isEmpty()) {
                 System.out.println("The reader " + reader.getName() + " hasn't lent any book yet.");
             } else {
                 reader.listBooksLent();
@@ -681,11 +687,11 @@ public class Library {
         }
     }
 
-    synchronized public void listBooksLent(String name){
+    synchronized public void listBooksLent(String name) {
         List<Reader> readersToView = this.readers.stream().filter(r -> r.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Reader readerDB = db.getReader(name);
-        if (!readersToView.isEmpty() && readerDB != null){
-            for (Reader reader : readersToView){
+        if (!readersToView.isEmpty() || readerDB != null) {
+            for (Reader reader : readersToView) {
                 this.listBooksLent(reader);
             }
         } else {
@@ -693,11 +699,11 @@ public class Library {
         }
     }
 
-    synchronized public void lendBook(Reader reader, Book book){
+    synchronized public void lendBook(Reader reader, Book book) {
         Reader readerDB = db.getReader(reader.getId());
         Book bookDB = db.getBook(book.getId());
-        if (this.readers.contains(reader) && readerDB != null){
-            if (this.books.contains(book) && bookDB != null) {
+        if (this.readers.contains(reader) || readerDB != null) {
+            if (this.books.contains(book) || bookDB != null) {
                 reader.lendBook(book);
                 System.out.println("The reader " + reader.getName() + " lent a book.");
             } else {
@@ -708,11 +714,11 @@ public class Library {
         }
     }
 
-    synchronized public void lendBook(String name, Book book){
+    synchronized public void lendBook(String name, Book book) {
         List<Reader> readersToLendBook = this.readers.stream().filter(r -> r.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Reader readerDB = db.getReader(name);
-        if (!readersToLendBook.isEmpty() && readerDB != null){
-            for (Reader reader : readersToLendBook){
+        if (!readersToLendBook.isEmpty() || readerDB != null) {
+            for (Reader reader : readersToLendBook) {
                 this.lendBook(reader, book);
             }
         } else {
@@ -720,10 +726,10 @@ public class Library {
         }
     }
 
-    synchronized public void lendBook(Reader reader, String title){
+    synchronized public void lendBook(Reader reader, String title) {
         List<Book> booksToLend = this.books.stream().filter(b -> b.getTitle().equals(title)).collect(Collectors.toList());
         Book bookDB = db.getBook(title);
-        if (!booksToLend.isEmpty() && bookDB != null){
+        if (!booksToLend.isEmpty() || bookDB != null) {
             for (Book book : booksToLend) {
                 this.lendBook(reader, book);
             }
@@ -732,11 +738,11 @@ public class Library {
         }
     }
 
-    synchronized public void lendBook(String name, String title){
+    synchronized public void lendBook(String name, String title) {
         List<Reader> readersToLendBook = this.readers.stream().filter(r -> r.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Reader readerDB = db.getReader(name);
-        if (!readersToLendBook.isEmpty() && readerDB != null){
-            for (Reader reader : readersToLendBook){
+        if (!readersToLendBook.isEmpty() || readerDB != null) {
+            for (Reader reader : readersToLendBook) {
                 this.lendBook(reader, title);
             }
         } else {
@@ -744,11 +750,11 @@ public class Library {
         }
     }
 
-    synchronized public void returnBook(Reader reader, Book book){
+    synchronized public void returnBook(Reader reader, Book book) {
         Reader readerDB = db.getReader(reader.getId());
         Book bookDB = db.getBook(book.getId());
-        if (this.readers.contains(reader) && readerDB != null){
-            if (this.books.contains(book) && bookDB != null) {
+        if (this.readers.contains(reader) || readerDB != null) {
+            if (this.books.contains(book) || bookDB != null) {
                 reader.returnBook(book);
                 System.out.println("The reader " + reader.getName() + " returned a book.");
             } else {
@@ -759,11 +765,11 @@ public class Library {
         }
     }
 
-    synchronized public void returnBook(String name, Book book){
+    synchronized public void returnBook(String name, Book book) {
         List<Reader> readersToReturnBook = this.readers.stream().filter(r -> r.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Reader readerDB = db.getReader(name);
-        if (!readersToReturnBook.isEmpty() && readerDB != null){
-            for (Reader reader : readersToReturnBook){
+        if (!readersToReturnBook.isEmpty() || readerDB != null) {
+            for (Reader reader : readersToReturnBook) {
                 this.returnBook(reader, book);
             }
         } else {
@@ -771,10 +777,10 @@ public class Library {
         }
     }
 
-    synchronized public void returnBook(Reader reader, String title){
+    synchronized public void returnBook(Reader reader, String title) {
         List<Book> booksToReturn = this.books.stream().filter(b -> b.getTitle().equals(title)).collect(Collectors.toList());
         Book bookDB = db.getBook(title);
-        if (!booksToReturn.isEmpty() && bookDB != null){
+        if (!booksToReturn.isEmpty() || bookDB != null) {
             for (Book book : booksToReturn) {
                 this.returnBook(reader, book);
             }
@@ -783,11 +789,11 @@ public class Library {
         }
     }
 
-    synchronized public void returnBook(String name, String title){
+    synchronized public void returnBook(String name, String title) {
         List<Reader> readersToReturnBook = this.readers.stream().filter(r -> r.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         Reader readerDB = db.getReader(name);
-        if (!readersToReturnBook.isEmpty() && readerDB != null){
-            for (Reader reader : readersToReturnBook){
+        if (!readersToReturnBook.isEmpty() || readerDB != null) {
+            for (Reader reader : readersToReturnBook) {
                 this.returnBook(reader, title);
             }
         } else {
@@ -795,32 +801,31 @@ public class Library {
         }
     }
 
-    synchronized public void updateReader(Reader reader){
+    synchronized public void updateReader(Reader reader) {
         Reader readerDB = db.getReader(reader.getId());
         if (!this.readers.contains(reader) && readerDB == null) {
             System.out.println("The reader doesn't exists in the library.");
         } else {
             db.updateReader(reader);
-            List<Reader> readersToUpdate = this.readers.stream().filter(b -> b.getId() == reader.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-            for (Reader reader1 : readersToUpdate){
-                this.sections.remove(reader1);
+            List<Reader> readersToUpdate = this.readers.stream().filter(b -> b.getId() == reader.getId()).collect(Collectors.toList());
+            for (Reader reader1 : readersToUpdate) {
+                this.readers.remove(reader1);
             }
             this.readers.add(reader);
             System.out.println("The reader " + reader.getName() + " was successfully modified.");
         }
     }
 
-    synchronized public void updateReader(String name, java.util.Date birthDate, String email, String address){
+    synchronized public void updateReader(String name, java.util.Date birthDate, String email, String address) {
         Reader reader = new Reader(name, birthDate, email, address);
         this.updateReader(reader);
     }
 
 
-
     // publishing houses related actions
-    synchronized public void listAllPublishingHouses(){
+    synchronized public void listAllPublishingHouses() {
         List<PublishingHouse> publishingHouses = db.getPublishingHouses();
-        if (this.publishingHouses.isEmpty()){
+        if (this.publishingHouses.isEmpty()) {
             System.out.println("There are no publiching houses assosiated with the library at the moment.");
         } else {
             System.out.println("The publishing houses associated with the library are:");
@@ -830,9 +835,9 @@ public class Library {
         }
     }
 
-    synchronized public void addPublishingHouse(PublishingHouse publishingHouse){
+    synchronized public void addPublishingHouse(PublishingHouse publishingHouse) {
         PublishingHouse publishingHouseDB = db.getPublishingHouse(publishingHouse.getId());
-        if (this.publishingHouses.contains(publishingHouse) && publishingHouseDB != null) {
+        if (this.publishingHouses.contains(publishingHouse) || publishingHouseDB != null) {
             System.out.println("The publishing house is already associated with the library.");
         } else {
             db.createPublishingHouse(publishingHouse);
@@ -841,14 +846,14 @@ public class Library {
         }
     }
 
-    synchronized public void addPublishingHouse(String name, Date establishmentDate){
+    synchronized public void addPublishingHouse(String name, Date establishmentDate) {
         PublishingHouse publishingHouse = new PublishingHouse(name, establishmentDate);
         this.addPublishingHouse(publishingHouse);
     }
 
-    synchronized public void removePublishingHouse(PublishingHouse publishingHouse){
+    synchronized public void removePublishingHouse(PublishingHouse publishingHouse) {
         PublishingHouse publishingHouseDB = db.getPublishingHouse(publishingHouse.getId());
-        if (this.publishingHouses.contains(publishingHouse) && publishingHouseDB != null){
+        if (this.publishingHouses.contains(publishingHouse) || publishingHouseDB != null) {
             db.deletePublishingHouse(publishingHouse.getId());
             this.publishingHouses.remove(publishingHouse);
             System.out.println("The publishing house was successfully removed from the library.");
@@ -857,11 +862,11 @@ public class Library {
         }
     }
 
-    synchronized public void removePublishingHouse(String name){
+    synchronized public void removePublishingHouse(String name) {
         List<PublishingHouse> publishingHousesToRemove = this.publishingHouses.stream().filter(ph -> ph.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
         PublishingHouse publishingHouseDB = db.getPublishingHouse(name);
-        if (!publishingHousesToRemove.isEmpty() && publishingHouseDB != null){
-            for (PublishingHouse publishingHouse : publishingHousesToRemove){
+        if (!publishingHousesToRemove.isEmpty() || publishingHouseDB != null) {
+            for (PublishingHouse publishingHouse : publishingHousesToRemove) {
                 this.removePublishingHouse(publishingHouse);
             }
         } else {
@@ -869,9 +874,9 @@ public class Library {
         }
     }
 
-    synchronized public void listBooksFromPublishingHouse(PublishingHouse publishingHouse){
+    synchronized public void listBooksFromPublishingHouse(PublishingHouse publishingHouse) {
         PublishingHouse publishingHouseDB = db.getPublishingHouse(publishingHouse.getId());
-        if (this.publishingHouses.contains(publishingHouse) && publishingHouseDB != null) {
+        if (this.publishingHouses.contains(publishingHouse) || publishingHouseDB != null) {
             publishingHouse.listBooks();
         } else {
             System.out.println("The publishing house isn't associated with the library");
@@ -890,14 +895,14 @@ public class Library {
         }
     }
 
-    synchronized public void updatePublishingHouse(PublishingHouse publishingHouse){
+    synchronized public void updatePublishingHouse(PublishingHouse publishingHouse) {
         PublishingHouse publishingHouseDB = db.getPublishingHouse(publishingHouse.getId());
         if (!this.publishingHouses.contains(publishingHouse) && publishingHouseDB == null) {
             System.out.println("The publishing house isn't associated with the library.");
         } else {
             db.updatePublishingHouse(publishingHouse);
-            List<PublishingHouse> publishingHousesToUpdate = this.publishingHouses.stream().filter(b -> b.getId() == publishingHouse.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-            for (PublishingHouse publishingHouse1 : publishingHousesToUpdate){
+            List<PublishingHouse> publishingHousesToUpdate = this.publishingHouses.stream().filter(b -> b.getId() == publishingHouse.getId()).collect(Collectors.toList());
+            for (PublishingHouse publishingHouse1 : publishingHousesToUpdate) {
                 this.sections.remove(publishingHouse1);
             }
             this.publishingHouses.add(publishingHouse);
@@ -905,7 +910,7 @@ public class Library {
         }
     }
 
-    synchronized public void updatePublishingHouse(String name, Date establishmentDate){
+    synchronized public void updatePublishingHouse(String name, Date establishmentDate) {
         PublishingHouse publishingHouse = new PublishingHouse(name, establishmentDate);
         this.updatePublishingHouse(publishingHouse);
     }

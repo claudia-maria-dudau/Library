@@ -1,6 +1,6 @@
 package library.books;
 
-import library.DB;
+import library.database.DB;
 import library.people.Author;
 
 import java.util.Date;
@@ -12,7 +12,7 @@ public abstract class Book {
     protected String title;
     protected String type;
     protected int noPages;
-    protected double noCopies;
+    protected int noCopies;
     protected Date publishDate;
     protected String format;
     protected Section section;
@@ -47,7 +47,7 @@ public abstract class Book {
         this.publishingHouse = publishingHouse;
     }
 
-    public void setNoCopies(double noCopies) {
+    public void setNoCopies(int noCopies) {
         this.noCopies = noCopies;
         db.updateBook(this);
     }
@@ -98,7 +98,7 @@ public abstract class Book {
         return noPages;
     }
 
-    public double getNoCopies() {
+    public int getNoCopies() {
         return noCopies;
     }
 
