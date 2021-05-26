@@ -22,6 +22,11 @@ public class Library {
     private final DB db = DB.getInstance();
 
     private Library() {
+        this.books.addAll(db.getBooks());
+        this.sections.addAll(db.getSections());
+        this.authors.addAll(db.getAuthors());
+        this.readers.addAll(db.getReaders());
+        this.publishingHouses.addAll(db.getPublishingHouses());
     }
 
     public static Library getInstance() {
@@ -95,36 +100,6 @@ public class Library {
         System.out.println("25. Associating a new publishing house with the library");
         System.out.println("26. Removing a publishing house");
         System.out.println("27. Listing all the books from a publishing house");
-    }
-
-    synchronized public Section getSection(String name) {
-        for (Section section : this.sections) {
-            if (section.getName().equalsIgnoreCase(name)) {
-                return section;
-            }
-        }
-
-        return  null;
-    }
-
-    synchronized public Author getAuthor(String name) {
-        for (Author author : this.authors) {
-            if (author.getName().equalsIgnoreCase(name)) {
-                return author;
-            }
-        }
-
-        return null;
-    }
-
-    synchronized public PublishingHouse getPublishingHouse(String name) {
-        for (PublishingHouse publishingHouse : this.publishingHouses) {
-            if (publishingHouse.getName().equalsIgnoreCase(name)) {
-                return publishingHouse;
-            }
-        }
-
-        return  null;
     }
 
     synchronized public void details() {

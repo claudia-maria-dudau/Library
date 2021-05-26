@@ -4,6 +4,7 @@ import library.Library;
 import library.books.Book;
 import library.books.PublishingHouse;
 import library.books.Section;
+import library.database.DB;
 import library.people.Author;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 public class BooksPanel extends JPanel {
     private final Library library = Library.getInstance();
+    private final DB db = DB.getInstance();
     private List<Book> currentBooks = new ArrayList<>(library.getBooks());
     private static JList booksJList;
 
@@ -133,30 +135,32 @@ public class BooksPanel extends JPanel {
         // button
         JButton addBook = new JButton("Add book");
         addBook.addActionListener(e -> {
-            String title = titleField.getText();
-            int noPages = Integer.parseInt(noPagesField.getText());
-            java.sql.Date publishDate = null;
-            try {
-                publishDate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(publishDateField.getText()).getTime());
-            } catch (ParseException parseException) {
-                parseException.printStackTrace();
-            }
-            Section section = library.getSection(String.valueOf(sectionField.getSelectedItem()));
-            Author author = library.getAuthor(String.valueOf(authorField.getSelectedItem()));
-            PublishingHouse publishingHouse = library.getPublishingHouse(String.valueOf(publishingHouseField.getSelectedItem()));
-            String format = String.valueOf(formatField.getSelectedItem());
+            if (!titleField.getText().equalsIgnoreCase("") && !noPagesField.getText().equalsIgnoreCase("") && !publishDateField.getText().equalsIgnoreCase("")) {
+                String title = titleField.getText();
+                int noPages = Integer.parseInt(noPagesField.getText());
+                java.sql.Date publishDate = null;
+                try {
+                    publishDate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(publishDateField.getText()).getTime());
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+                Section section = db.getSection(String.valueOf(sectionField.getSelectedItem()));
+                Author author = db.getAuthor(String.valueOf(authorField.getSelectedItem()));
+                PublishingHouse publishingHouse = db.getPublishingHouse(String.valueOf(publishingHouseField.getSelectedItem()));
+                String format = String.valueOf(formatField.getSelectedItem());
 
-            if (format.equalsIgnoreCase("physical")){
-                int noCopies = Integer.parseInt(noCopiesField.getText());
-                library.addBook(title, noPages, publishDate, section, author, publishingHouse, noCopies);
-            } else {
-                library.addBook(title, noPages, publishDate, section, author, publishingHouse, format);
-            }
+                if (format.equalsIgnoreCase("physical")) {
+                    int noCopies = noCopiesField.getText().equals("") ? 1 : Integer.parseInt(noCopiesField.getText());
+                    library.addBook(title, noPages, publishDate, section, author, publishingHouse, noCopies);
+                } else {
+                    library.addBook(title, noPages, publishDate, section, author, publishingHouse, format);
+                }
 
-            // updating books list
-            currentBooks = new ArrayList<>(library.getBooks());
-            BooksPanel.booksJList = createBooksJList(currentBooks);
-            listBooks.setLeftComponent(booksJList);
+                // updating books list
+                currentBooks = new ArrayList<>(library.getBooks());
+                BooksPanel.booksJList = createBooksJList(currentBooks);
+                listBooks.setLeftComponent(booksJList);
+            }
         });
 
         // reset button
@@ -262,19 +266,20 @@ public class BooksPanel extends JPanel {
             if (BooksPanel.booksJList.getSelectedIndex() != -1){
                 // listing the details about the selected book
                 int selectedBookId = Integer.parseInt(BooksPanel.booksJList.getSelectedValue().toString().split("\\) ")[0]);
-                List<Book> selectedBooks = library.getBooks().stream().filter(b -> b.getId() == selectedBookId).collect(Collectors.toList());
-                Book book = selectedBooks.get(0);
+                Book book = db.getBook(selectedBookId);
 
                 // details about book
-                String bookString = "<p><b>Title:</b> " + book.getTitle() + "</p>" +
-                        "<p><b>Type:</b> " + ((book.getType().equalsIgnoreCase("pbook") ? "physical" : "e-book")) + "</p>" +
-                        "<p><b>Number of pages:</b> " + ((book.getNoPages() == Integer.MAX_VALUE) ? "-" : book.getNoPages()) + "</p>" +
-                        "<p><b>Number of copies:</b> " + book.getNoCopies() + "</p>" +
-                        "<p><b>Publishing date:</b> " + new SimpleDateFormat("dd MMMM yyyy").format(book.getPublishDate()) + "</p>" +
-                        "<p><b>Format:</b> " + book.getFormat() + "</p>" +
-                        "<p><b>Section:</b> " + book.getSection().getName() + "</p>" +
-                        "<p><b>Author:</b> " + book.getAuthor().getName() + "</p>" +
-                        "<p><b>Publishing house:</b> " + book.getPublishingHouse().getName() + "</p>";
+                String bookString = "Title: " + book.getTitle() +
+                        "\nType: " + ((book.getType().equalsIgnoreCase("pbook") ? "physical" : "e-book")) +
+                        "\nNumber of pages: " + book.getNoPages() +
+                        "\nNumber of copies: " + ((book.getNoCopies() == Integer.MAX_VALUE) ? "-" : book.getNoCopies()) +
+                        "\nPublishing date: " + new SimpleDateFormat("dd MMMM yyyy").format(book.getPublishDate()) +
+                        "\nFormat: " + book.getFormat() +
+                        "\nSection: " + book.getSection().getName() +
+                        "\nAuthor: " + book.getAuthor().getName() +
+                        "\nPublishing house: " + book.getPublishingHouse().getName();
+
+                JOptionPane.showMessageDialog(listBooks, bookString, book.getTitle(), JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
@@ -286,8 +291,7 @@ public class BooksPanel extends JPanel {
                 if (BooksPanel.booksJList.getSelectedIndex() != -1){
                     // editing the selected book
                     int selectedBookId = Integer.parseInt(BooksPanel.booksJList.getSelectedValue().toString().split("\\) ")[0]);
-                    List<Book> selectedBooks = library.getBooks().stream().filter(b -> b.getId() == selectedBookId).collect(Collectors.toList());
-                    Book book = selectedBooks.get(0);
+                    Book book = db.getBook(selectedBookId);
                 }
             }
         });
@@ -298,8 +302,7 @@ public class BooksPanel extends JPanel {
             if (BooksPanel.booksJList.getSelectedIndex() != -1){
                 // deleting the selected book
                 int selectedBookId = Integer.parseInt(BooksPanel.booksJList.getSelectedValue().toString().split("\\) ")[0]);
-                List<Book> selectedBooks = library.getBooks().stream().filter(b -> b.getId() == selectedBookId).collect(Collectors.toList());
-                Book book = selectedBooks.get(0);
+                Book book = db.getBook(selectedBookId);
 
                 library.removeBook(book);
                 currentBooks = new ArrayList<>(library.getBooks());

@@ -21,11 +21,11 @@ public class Program {
     private static GUI gui;
 
     public static void main(String[] args) {
-        readAuthors();
-        readSections();
-        readPublishingHouse();
-        readBooks();
-        readReaders();
+        // readAuthors();
+        // readSections();
+        // readPublishingHouse();
+        // readBooks();
+        // readReaders();
 
         gui = GUI.getInstance();
 
@@ -92,21 +92,21 @@ public class Program {
 
             Section section = null;
             try {
-                section = library.getSection(bookDetails[4]);
+                section = db.getSection(bookDetails[4]);
             } catch (Exception e){
                 System.out.println("The section " + bookDetails[4] + " doesn't exist.");
             }
 
             Author author = null;
             try {
-                author = library.getAuthor(bookDetails[5]);
+                author = db.getAuthor(bookDetails[5]);
             } catch (Exception e){
                 System.out.println("The author " + bookDetails[5] + " doesn't exist.");
             }
 
             PublishingHouse publishingHouse = null;
             try {
-                publishingHouse = library.getPublishingHouse(bookDetails[6]);
+                publishingHouse = db.getPublishingHouse(bookDetails[6]);
             } catch (Exception e){
                 System.out.println("The publishing house " + bookDetails[6] + " doesn't exist");
             }
@@ -200,7 +200,7 @@ public class Program {
                         String sectionName = scanner.next();
                         if (typeSection == 1) {
                             try {
-                                section = library.getSection(sectionName);
+                                section = db.getSection(sectionName);
                                 ok = Boolean.TRUE;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -221,7 +221,7 @@ public class Program {
                         String authorName = scanner.next();
                         if (typeAuthor == 1) {
                             try {
-                                author = library.getAuthor(authorName);
+                                author = db.getAuthor(authorName);
                                 ok = Boolean.TRUE;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -257,7 +257,7 @@ public class Program {
                         String publishingHouseName = scanner.next();
                         if (typePublishingHouse == 1) {
                             try {
-                                publishingHouse = library.getPublishingHouse(publishingHouseName);
+                                publishingHouse = db.getPublishingHouse(publishingHouseName);
                                 ok = Boolean.TRUE;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -407,7 +407,7 @@ public class Program {
                         String authorName = scanner.next();
                         if (typeAuthor == 1) {
                             try {
-                                author = library.getAuthor(authorName);
+                                author = db.getAuthor(authorName);
                                 ok = Boolean.TRUE;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -443,7 +443,7 @@ public class Program {
                         String publishingHouseName = scanner.next();
                         if (typePublishingHouse == 1) {
                             try {
-                                publishingHouse = library.getPublishingHouse(publishingHouseName);
+                                publishingHouse = db.getPublishingHouse(publishingHouseName);
                                 ok = Boolean.TRUE;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -561,7 +561,7 @@ public class Program {
                         sectionName = scanner.next();
                         if (typeSection == 1) {
                             try {
-                                section = library.getSection(sectionName);
+                                section = db.getSection(sectionName);
                                 ok = Boolean.TRUE;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -582,7 +582,7 @@ public class Program {
                         String publishingHouseName = scanner.next();
                         if (typePublishingHouse == 1) {
                             try {
-                                publishingHouse = library.getPublishingHouse(publishingHouseName);
+                                publishingHouse = db.getPublishingHouse(publishingHouseName);
                                 ok = Boolean.TRUE;
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
