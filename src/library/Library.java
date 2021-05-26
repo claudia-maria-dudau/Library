@@ -190,8 +190,8 @@ public class Library {
 
     synchronized public void removeBook(String title) {
         List<Book> booksToRemove = this.books.stream().filter(b -> title.equals(b.getTitle())).collect(Collectors.toList());
-        Book bookDB = db.getBook(title);
-        if (booksToRemove.isEmpty() || bookDB != null) {
+        List<Book> bookDB = db.getBook(title);
+        if (booksToRemove.isEmpty() && (bookDB == null || bookDB.isEmpty())) {
             System.out.println("The title doesn't match with any books in the library.");
         } else {
             for (Book book : booksToRemove) {
@@ -202,8 +202,8 @@ public class Library {
 
     synchronized public void addCopies(String title, int noCopies) {
         List<Book> booksToAddCopies = this.books.stream().filter(b -> title.equals(b.getTitle()) && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-        Book bookDB = db.getBook(title);
-        if (booksToAddCopies.isEmpty() && bookDB == null) {
+        List<Book> bookDB = db.getBook(title);
+        if (booksToAddCopies.isEmpty() && (bookDB == null || bookDB.isEmpty())) {
             System.out.println("The title doesn't match with any physical books in the library.");
         } else {
             for (Book book : booksToAddCopies) {
@@ -215,8 +215,8 @@ public class Library {
 
     synchronized public void addCopies(String title) {
         List<Book> booksToAddCopies = this.books.stream().filter(b -> title.equals(b.getTitle()) && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-        Book bookDB = db.getBook(title);
-        if (booksToAddCopies.isEmpty() && bookDB == null) {
+        List<Book> bookDB = db.getBook(title);
+        if (booksToAddCopies.isEmpty() && (bookDB == null || bookDB.isEmpty())) {
             System.out.println("The title doesn't match with any physical books in the library.");
         } else {
             for (Book book : booksToAddCopies) {
@@ -228,8 +228,8 @@ public class Library {
 
     synchronized public void lostCopy(String title) {
         List<Book> booksToLoseCopy = this.books.stream().filter(b -> title.equals(b.getTitle()) && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-        Book bookDB = db.getBook(title);
-        if (booksToLoseCopy.isEmpty() && bookDB == null) {
+        List<Book> bookDB = db.getBook(title);
+        if (booksToLoseCopy.isEmpty() && (bookDB == null || bookDB.isEmpty())) {
             System.out.println("The title doesn't match with any physical books in the library.");
         } else {
             for (Book book : booksToLoseCopy) {
@@ -241,8 +241,8 @@ public class Library {
 
     synchronized public void lostCopy(String title, int noCopies) {
         List<Book> booksToLoseCopy = this.books.stream().filter(b -> title.equals(b.getTitle()) && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
-        Book bookDB = db.getBook(title);
-        if (booksToLoseCopy.isEmpty() && bookDB == null) {
+        List<Book> bookDB = db.getBook(title);
+        if (booksToLoseCopy.isEmpty() && (bookDB == null || bookDB.isEmpty())) {
             System.out.println("The title doesn't match with any physical books in the library.");
         } else {
             for (Book book : booksToLoseCopy) {
@@ -728,8 +728,8 @@ public class Library {
 
     synchronized public void lendBook(Reader reader, String title) {
         List<Book> booksToLend = this.books.stream().filter(b -> b.getTitle().equals(title)).collect(Collectors.toList());
-        Book bookDB = db.getBook(title);
-        if (!booksToLend.isEmpty() || bookDB != null) {
+        List<Book> bookDB = db.getBook(title);
+        if (!booksToLend.isEmpty() || bookDB != null || !bookDB.isEmpty()) {
             for (Book book : booksToLend) {
                 this.lendBook(reader, book);
             }
@@ -779,8 +779,8 @@ public class Library {
 
     synchronized public void returnBook(Reader reader, String title) {
         List<Book> booksToReturn = this.books.stream().filter(b -> b.getTitle().equals(title)).collect(Collectors.toList());
-        Book bookDB = db.getBook(title);
-        if (!booksToReturn.isEmpty() || bookDB != null) {
+        List<Book> bookDB = db.getBook(title);
+        if (!booksToReturn.isEmpty() || bookDB != null || !bookDB.isEmpty()) {
             for (Book book : booksToReturn) {
                 this.returnBook(reader, book);
             }

@@ -124,6 +124,7 @@ public class DB implements AutoCloseable {
             stmt.setInt(1, bookId);
             ResultSet results = stmt.executeQuery();
 
+            results.next();
             Section section = getSection(results.getInt(8));
             Author author = getAuthor(results.getInt(9));
             PublishingHouse publishingHouse = getPublishingHouse(results.getInt(10));
@@ -138,25 +139,30 @@ public class DB implements AutoCloseable {
         }
     }
 
-    public Book getBook(String bookTitle) {
-        // getting the book with the given ID from the database
+    public List<Book> getBook(String bookTitle) {
+        // getting the books with the given title from the database
+        List<Book> books = new ArrayList<Book>();
         try {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM books WHERE title = ?");
             stmt.setString(1, bookTitle);
             ResultSet results = stmt.executeQuery();
 
-            Section section = getSection(results.getInt(8));
-            Author author = getAuthor(results.getInt(9));
-            PublishingHouse publishingHouse = getPublishingHouse(results.getInt(10));
+            while (results.next()) {
+                Section section = getSection(results.getInt(8));
+                Author author = getAuthor(results.getInt(9));
+                PublishingHouse publishingHouse = getPublishingHouse(results.getInt(10));
 
-            if (results.getString(3).equalsIgnoreCase("pbook")) {
-                return new Pbook(results.getInt(1), results.getString(2), results.getInt(4), results.getDate(6), section, author, publishingHouse, results.getInt(5));
-            } else {
-                return new Ebook(results.getInt(1), results.getString(2), results.getInt(4), results.getDate(6), section, author, publishingHouse, results.getString(7));
+                if (results.getString(3).equalsIgnoreCase("pbook")) {
+                    books.add(new Pbook(results.getInt(1), results.getString(2), results.getInt(4), results.getDate(6), section, author, publishingHouse, results.getInt(5)));
+                } else {
+                   books.add(new Ebook(results.getInt(1), results.getString(2), results.getInt(4), results.getDate(6), section, author, publishingHouse, results.getString(7)));
+                }
             }
         } catch (SQLException e) {
             return null;
         }
+
+        return books;
     }
 
     public List<Book> getBooks() {
@@ -227,6 +233,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM sections WHERE section_id = ?");
             stmt.setInt(1, sectionId);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new Section(results.getInt(1), results.getString(2), results.getInt(3));
         } catch (SQLException e) {
             return null;
@@ -239,6 +247,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM sections WHERE name = ?");
             stmt.setString(1, sectionName);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new Section(results.getInt(1), results.getString(2), results.getInt(3));
         } catch (SQLException e) {
             return null;
@@ -325,6 +335,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM publishingHouses WHERE publishing_house_id = ?");
             stmt.setInt(1, publishingHOuseId);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new PublishingHouse(results.getInt(1), results.getString(2), results.getDate(3));
         } catch (SQLException e) {
             return null;
@@ -337,6 +349,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM publishingHouses WHERE name = ?");
             stmt.setString(1, publishingHouseName);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new PublishingHouse(results.getInt(1), results.getString(2), results.getDate(3));
         } catch (SQLException e) {
             return null;
@@ -425,6 +439,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM authors WHERE author_id = ?");
             stmt.setInt(1, authorId);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new Author(results.getInt(1), results.getString(2), results.getDate(3), results.getString(4), results.getInt(5));
         } catch (SQLException e) {
             return null;
@@ -437,6 +453,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM authors WHERE name = ?");
             stmt.setString(1, authorName);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new Author(results.getInt(1), results.getString(2), results.getDate(3), results.getString(4), results.getInt(5));
         } catch (SQLException e) {
             return null;
@@ -527,6 +545,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM readers WHERE reader_id = ?");
             stmt.setInt(1, readerId);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new Reader(results.getInt(1), results.getString(2), results.getDate(3), results.getString(4), results.getString(5), results.getInt(6));
         } catch (SQLException e) {
             return null;
@@ -539,6 +559,8 @@ public class DB implements AutoCloseable {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM readers WHERE name = ?");
             stmt.setString(1, readerName);
             ResultSet results = stmt.executeQuery();
+
+            results.next();
             return new Reader(results.getInt(1), results.getString(2), results.getDate(3), results.getString(4), results.getString(5), results.getInt(6));
         } catch (SQLException e) {
             return null;
