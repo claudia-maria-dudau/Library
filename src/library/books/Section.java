@@ -21,6 +21,7 @@ public class Section {
     }
 
     public Section(String name, Book[] books){
+        this.id = ++noSections;
         this.name = name;
         for (Book book:
                 books) {

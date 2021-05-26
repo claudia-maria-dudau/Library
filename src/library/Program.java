@@ -8,6 +8,8 @@ import library.database.DB;
 import library.gui.GUI;
 import library.people.Author;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,7 +22,7 @@ public class Program {
     private static final DB db = DB.getInstance();
     private static GUI gui;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         // readAuthors();
         // readSections();
         // readPublishingHouse();

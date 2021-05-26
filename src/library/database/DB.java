@@ -184,7 +184,7 @@ public class DB implements AutoCloseable {
     public void updateBook(Book book) {
         // updating a book from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE books SET title = ? book_type = ? no_pages = ? no_copies = ? publish_date = ? format = ? section_id = ? author_id = ? publishing_house_id = ? WHERE book_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE books SET title = ?, book_type = ?, no_pages = ?, no_copies = ?, publish_date = ?, format = ?, section_id = ?, author_id = ?, publishing_house_id = ? WHERE book_id = ?");
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getType());
             statement.setInt(3, book.getNoPages());
@@ -274,7 +274,7 @@ public class DB implements AutoCloseable {
     public void updateSection(Section section) {
         // updating a section from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE sections SET name = ? no_books = ? WHERE section_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE sections SET name = ?, no_books = ? WHERE section_id = ?");
             statement.setString(1, section.getName());
             statement.setInt(2, section.getNoBooks());
             statement.setInt(3, section.getId());
@@ -376,7 +376,7 @@ public class DB implements AutoCloseable {
     public void updatePublishingHouse(PublishingHouse publishingHouse) {
         // updating a publishing house from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE publishingHouses SET name = ? establishment_date = ? WHERE publishing_house_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE publishingHouses SET name = ?, establishment_date = ? WHERE publishing_house_id = ?");
             statement.setString(1, publishingHouse.getName());
             statement.setDate(2, new java.sql.Date(publishingHouse.getEstablishmentDate().getTime()));
             statement.setInt(3, publishingHouse.getId());
@@ -480,7 +480,7 @@ public class DB implements AutoCloseable {
     public void updateAuthor(Author author) {
         // updating an author from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE authors SET name = ? birthdate = ? email = ? no_books_written = ? WHERE author_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE authors SET name = ?, birthdate = ?, email = ?, no_books_written = ? WHERE author_id = ?");
             statement.setString(1, author.getName());
             statement.setDate(2, (Date) author.getBirthDate());
             statement.setString(3, author.getMail());
@@ -586,7 +586,7 @@ public class DB implements AutoCloseable {
     public void updateReader(Reader reader) {
         // updating a reader from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE readers SET name = ? birthdate = ? email = ? address = ? no_books_lent = ? WHERE reader_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE readers SET name = ?, birthdate = ?, email = ?, address = ?, no_books_lent = ? WHERE reader_id = ?");
             statement.setString(1, reader.getName());
             statement.setDate(2, (Date) reader.getBirthDate());
             statement.setString(3, reader.getMail());

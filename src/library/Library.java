@@ -175,6 +175,17 @@ public class Library {
         }
     }
 
+    synchronized public void addCopies(Book book, int noCopies) {
+        List<Book> booksToAddCopies = this.books.stream().filter(b -> book.getId() == b.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
+        Book bookDB = db.getBook(book.getId());
+        if (booksToAddCopies.isEmpty() && bookDB == null) {
+            System.out.println("The title doesn't match with any physical books in the library.");
+        } else {
+            Pbook pbook = (Pbook) book;
+            pbook.addCopy(noCopies);
+        }
+    }
+
     synchronized public void addCopies(String title, int noCopies) {
         List<Book> booksToAddCopies = this.books.stream().filter(b -> title.equals(b.getTitle()) && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
         List<Book> bookDB = db.getBook(title);
@@ -198,6 +209,17 @@ public class Library {
                 Pbook pbook = (Pbook) book;
                 pbook.addCopy();
             }
+        }
+    }
+
+    synchronized public void lostCopy(Book book, int noCopies) {
+        List<Book> booksToAddCopies = this.books.stream().filter(b -> book.getId() == b.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
+        Book bookDB = db.getBook(book.getId());
+        if (booksToAddCopies.isEmpty() && bookDB == null) {
+            System.out.println("The title doesn't match with any physical books in the library.");
+        } else {
+            Pbook pbook = (Pbook) book;
+            pbook.lostCopy(noCopies);
         }
     }
 
@@ -233,7 +255,7 @@ public class Library {
             System.out.println("The book doesn't exist in the library.");
         } else {
             db.updateBook(book);
-            List<Book> booksToUpdate = this.books.stream().filter(b -> b.getId() == book.getId() && b.getClass().equals(Pbook.class)).collect(Collectors.toList());
+            List<Book> booksToUpdate = this.books.stream().filter(b -> b.getId() == book.getId()).collect(Collectors.toList());
             for (Book book1 : booksToUpdate) {
                 this.books.remove(book1);
             }
@@ -242,13 +264,13 @@ public class Library {
         }
     }
 
-    synchronized public void updateBook(String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse, int noCopies) {
-        Pbook book = new Pbook(title, noPages, publishDate, section, author, publishingHouse, noCopies);
+    synchronized public void updateBook(int id, String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse, int noCopies) {
+        Pbook book = new Pbook(id, title, noPages, publishDate, section, author, publishingHouse, noCopies);
         this.updateBook(book);
     }
 
-    synchronized public void updateBook(String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse, String format) {
-        Ebook book = new Ebook(title, noPages, publishDate, section, author, publishingHouse, format);
+    synchronized public void updateBook(int id, String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse, String format) {
+        Ebook book = new Ebook(id, title, noPages, publishDate, section, author, publishingHouse, format);
         this.updateBook(book);
     }
 
@@ -434,13 +456,8 @@ public class Library {
         }
     }
 
-    synchronized public void updateSection(String name) {
-        Section section = new Section(name);
-        this.updateSection(section);
-    }
-
-    synchronized public void updateSection(String name, Book[] books) {
-        Section section = new Section(name, books);
+    synchronized public void updateSection(int id, String name, int noBooks) {
+        Section section = new Section(id, name, noBooks);
         this.updateSection(section);
     }
 
@@ -586,13 +603,8 @@ public class Library {
         }
     }
 
-    synchronized public void updateAuthor(String name, java.util.Date birthDate, String email) {
-        Author author = new Author(name, birthDate, email);
-        this.updateAuthor(author);
-    }
-
-    synchronized public void updateAuthor(String name, java.util.Date birthdate, String mail, Book[] books) {
-        Author author = new Author(name, birthdate, mail, books);
+    synchronized public void updateAuthor(int id, String name, java.util.Date birthDate, String email, int noBooksWritten) {
+        Author author = new Author(id, name, birthDate, email, noBooksWritten);
         this.updateAuthor(author);
     }
 
@@ -791,8 +803,8 @@ public class Library {
         }
     }
 
-    synchronized public void updateReader(String name, java.util.Date birthDate, String email, String address) {
-        Reader reader = new Reader(name, birthDate, email, address);
+    synchronized public void updateReader(int id, String name, java.util.Date birthDate, String email, String address, int noBooksLent) {
+        Reader reader = new Reader(id, name, birthDate, email, address, noBooksLent);
         this.updateReader(reader);
     }
 
@@ -885,8 +897,8 @@ public class Library {
         }
     }
 
-    synchronized public void updatePublishingHouse(String name, Date establishmentDate) {
-        PublishingHouse publishingHouse = new PublishingHouse(name, establishmentDate);
+    synchronized public void updatePublishingHouse(int id, String name, Date establishmentDate) {
+        PublishingHouse publishingHouse = new PublishingHouse(id, name, establishmentDate);
         this.updatePublishingHouse(publishingHouse);
     }
 }

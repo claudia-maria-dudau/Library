@@ -59,12 +59,14 @@ public class Author extends Person {
     public void addBook(Book book){
         this.booksWritten.add(book);
         this.noBooksWritten++;
+        db.updateAuthor(this);
     }
 
     public void removeBook(Book book){
         if (this.booksWritten.contains(book)){
             this.booksWritten.remove(book);
             this.noBooksWritten--;
+            db.updateAuthor(this);
         }
         else{
             System.out.println("The book " + book.getTitle() + " doesn't exist from the author " + this.name + ".");
