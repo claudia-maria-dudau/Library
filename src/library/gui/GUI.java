@@ -27,6 +27,10 @@ public class GUI {
         JPanel books = new BooksPanel();
         content.addTab("Books", books);
 
+        // PANEL 2 - BOOKS
+        JPanel sections = new SectionsPanel();
+        content.addTab("Sections", sections);
+
 
         this.principal.setContentPane(content);
         this.principal.setVisible(true);

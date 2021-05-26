@@ -1,5 +1,6 @@
 package library;
 
+import library.books.Book;
 import library.books.PublishingHouse;
 import library.books.Section;
 import library.database.Audit;
@@ -7,6 +8,7 @@ import library.database.CSV;
 import library.database.DB;
 import library.gui.GUI;
 import library.people.Author;
+import library.people.Person;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,11 +25,22 @@ public class Program {
     private static GUI gui;
 
     public static void main(String[] args) throws SQLException {
-        // readAuthors();
-        // readSections();
-        // readPublishingHouse();
-        // readBooks();
-        // readReaders();
+        // db.getConnection().createStatement().executeUpdate("DELETE FROM books");
+        // db.getConnection().createStatement().executeUpdate("DELETE FROM sections");
+        // db.getConnection().createStatement().executeUpdate("DELETE FROM authors");
+        // db.getConnection().createStatement().executeUpdate("DELETE FROM readers");
+        // db.getConnection().createStatement().executeUpdate("DELETE FROM publishingHouses");
+
+        readAuthors();
+        readSections();
+        readPublishingHouse();
+        readBooks();
+        readReaders();
+
+        Book.setNoBooks(library.getBooks().size());
+        Section.setNoSections(library.getSections().size());
+        Person.setNoPersons(library.getAuthors().size() + library.getReaders().size());
+        PublishingHouse.setNoPublishingHouses(library.getPublishingHouses().size());
 
         gui = GUI.getInstance();
 

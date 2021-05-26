@@ -52,6 +52,10 @@ public abstract class Book {
         db.updateBook(this);
     }
 
+    public static void setNoBooks(int noBooks) {
+        Book.noBooks = noBooks;
+    }
+
     @Override
     public String toString() {
         return "Book{" +

@@ -3,6 +3,7 @@ package library;
 import library.books.*;
 import library.database.DB;
 import library.people.Author;
+import library.people.Person;
 import library.people.Reader;
 
 import java.util.*;
@@ -257,9 +258,9 @@ public class Library {
             db.updateBook(book);
             List<Book> booksToUpdate = this.books.stream().filter(b -> b.getId() == book.getId()).collect(Collectors.toList());
             for (Book book1 : booksToUpdate) {
-                this.books.remove(book1);
+                this.removeBook(book1);
             }
-            this.books.add(book);
+            this.addBook(book);
             System.out.println("The book " + book.getTitle() + " was successfully modified.");
         }
     }
@@ -456,8 +457,8 @@ public class Library {
         }
     }
 
-    synchronized public void updateSection(int id, String name, int noBooks) {
-        Section section = new Section(id, name, noBooks);
+    synchronized public void updateSection(int id, String name, int noBooks, List<Book> books) {
+        Section section = new Section(id, name, noBooks, books);
         this.updateSection(section);
     }
 

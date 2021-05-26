@@ -38,4 +38,8 @@ public abstract class Person {
     public String getMail() {
         return mail;
     }
+
+    public static void setNoPersons(int noPersons) {
+        Person.noPersons = noPersons;
+    }
 }

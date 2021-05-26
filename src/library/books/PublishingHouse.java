@@ -63,6 +63,10 @@ public class PublishingHouse {
         return establishmentDate;
     }
 
+    public static void setNoPublishingHouses(int noPublishingHouses) {
+        PublishingHouse.noPublishingHouses = noPublishingHouses;
+    }
+
     public void addBook(Book book) {
         if (!this.books.contains(book)) {
             this.books.add(book);

@@ -27,12 +27,13 @@ public class BooksPanel extends JPanel {
     private final DB db = DB.getInstance();
     private List<Book> currentBooks = new ArrayList<>(library.getBooks());
     private static JList booksJList;
+    private static  JSplitPane listBooks = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
     public BooksPanel() {
         this.setLayout(new BorderLayout());
 
         // LIST BOOKS PANEL
-        JSplitPane listBooks = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        // JSplitPane listBooks = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
         // listing books
         booksJList = this.createBooksJList(currentBooks);
@@ -513,7 +514,13 @@ public class BooksPanel extends JPanel {
         this.add(crud, BorderLayout.SOUTH);
     }
 
-    public JList createBooksJList(List<Book> books) {
+    public static void setCurrentBooks(List<Book> currentBooks) {
+        currentBooks = currentBooks;
+        BooksPanel.booksJList = createBooksJList(currentBooks);
+        listBooks.setLeftComponent(new JScrollPane(booksJList));
+    }
+
+    public static JList createBooksJList(List<Book> books) {
         String[] booksString = new String[books.size()];
         int i = 0;
         for (Book book : books) {
