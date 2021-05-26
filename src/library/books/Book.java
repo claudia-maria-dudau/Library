@@ -32,9 +32,9 @@ public abstract class Book {
         this.author = author;
         this.publishingHouse = publishingHouse;
 
-        this.section.addBook(this);
-        this.publishingHouse.addBook(this);
-        this.author.addBook(this);
+        this.getAuthor().addBook(this);
+        this.getSection().addBook(this);
+        this.getPublishingHouse().addBook(this);
     }
 
     public Book(int id, String title, int noPages, Date publishDate, Section section, Author author, PublishingHouse publishingHouse){

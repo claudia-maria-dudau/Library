@@ -11,7 +11,7 @@ public class Section {
     private int id;
     private final String name;
     private int noBooks;
-    private final TreeSet<Book> books = new TreeSet<>(Comparator.comparing(Book::getTitle));
+    // private final TreeSet<Book> books = new TreeSet<>(Comparator.comparing(Book::getTitle));
     private DB db = DB.getInstance();
 
     public Section(String name){
@@ -35,23 +35,13 @@ public class Section {
         this.noBooks = noBooks;
     }
 
-    public Section(int id, String name, int noBooks, List<Book> books){
-        this.id = id;
-        this.name = name;
-        this.noBooks = noBooks;
-        for (Book book:
-                books) {
-            this.addBook(book);
-        }
-    }
 
     @Override
     public String toString() {
         return "Section{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", noBooks=" + noBooks +
-                ", books=" + books +
+//                ", noBooks=" + noBooks +
                 '}';
     }
 
@@ -67,35 +57,34 @@ public class Section {
         return noBooks;
     }
 
-    public TreeSet<Book> getBooks() {
-        return books;
-    }
+//    public TreeSet<Book> getBooks() {
+//        return books;
+//    }
 
     public static void setNoSections(int noSections) {
         Section.noSections = noSections;
     }
 
     public void addBook(Book book) {
-        if (!this.books.contains(book)) {
+//        if (!this.books.contains(book)) {
             this.noBooks++;
-            this.books.add(book);
+//            this.books.add(book);
             db.updateSection(this);
-        }
-        else{
-            System.out.println("The book already exists in the section " + this.name + ".");
-        }
+//        }
+//        else{
+//            System.out.println("The book already exists in the section " + this.name + ".");
+//        }
     }
 
     public void removeBook(Book book) {
-        if (this.books.contains(book)){
+//        if (this.books.contains(book)){
             this.noBooks--;
-            this.books.remove(book);
+//            this.books.remove(book);
             db.updateSection(this);
-        }
-        else{
-            System.out.println("The book " + book.getTitle() + " doesn't exist in the section " + this.name + ".");
-        }
-
+//        }
+//        else{
+//            System.out.println("The book " + book.getTitle() + " doesn't exist in the section " + this.name + ".");
+//        }
     }
 
     public void listBooks() {

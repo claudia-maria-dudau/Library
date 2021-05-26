@@ -59,6 +59,8 @@ public class SectionsPanel extends JPanel {
                     currentSections = new ArrayList<>(library.getSections());
                     SectionsPanel.sectionsJList = createSectionsJList(currentSections);
                     listSections.setLeftComponent(sectionsJList);
+
+                    BooksPanel.setAddBookPanel();
                 } else {
                     JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
 
@@ -130,7 +132,7 @@ public class SectionsPanel extends JPanel {
                         "\nNumber of books in the section: " + section.getNoBooks() +
                         "\nBooks in the section:\n";
 
-                for (Book book : db.getBooksFromSection(section.getId())){
+                for (Book book : db.getBooksFromSection(section.getId())) {
                     sectionString += book.getTitle() + "\n";
                 }
 
@@ -162,12 +164,14 @@ public class SectionsPanel extends JPanel {
                 if (result == JOptionPane.OK_OPTION) {
                     if (!nameField1.getText().equalsIgnoreCase("")) {
                         String name = nameField1.getText();
-                        library.updateSection(section.getId(), name, section.getNoBooks(), db.getBooksFromSection(section.getId()));
+                        library.updateSection(section.getId(), name, section.getNoBooks());
 
                         // updating sections list
                         currentSections = new ArrayList<>(library.getSections());
                         SectionsPanel.sectionsJList = createSectionsJList(currentSections);
                         listSections.setLeftComponent(sectionsJList);
+
+                        BooksPanel.setAddBookPanel();
                     } else {
                         JOptionPane.showMessageDialog(editPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
                     }
@@ -183,22 +187,61 @@ public class SectionsPanel extends JPanel {
                 int selectedSectionId = Integer.parseInt(SectionsPanel.sectionsJList.getSelectedValue().toString().split("\\) ")[0]);
                 Section section = db.getSection(selectedSectionId);
 
-                library.removeSection(new Section(section.getId(), section.getName(), section.getNoBooks(), db.getBooksFromSection(section.getId())));
+                library.removeSection(new Section(section.getId(), section.getName(), section.getNoBooks()));
                 currentSections = new ArrayList<>(library.getSections());
                 SectionsPanel.sectionsJList = createSectionsJList(currentSections);
                 listSections.setLeftComponent(new JScrollPane(sectionsJList));
 
                 // updating books list
                 BooksPanel.setCurrentBooks(new ArrayList<>(library.getBooks()));
+                BooksPanel.setAddBookPanel();
             }
         });
 
         // add book from section
         JButton addBook = new JButton("Add book");
+        addBook.addActionListener(e -> {
+            if (SectionsPanel.sectionsJList.getSelectedIndex() != -1) {
+                // adding a book into the selected section
+                int selectedSectionId = Integer.parseInt(SectionsPanel.sectionsJList.getSelectedValue().toString().split("\\) ")[0]);
+                Section section = db.getSection(selectedSectionId);
+
+                GUI.setAddBook(new AddBookPanel(section, null));
+            }
+        });
 
         // remove book from section
         JButton removeBook = new JButton("Remove book");
+        removeBook.addActionListener(e -> {
+            if (SectionsPanel.sectionsJList.getSelectedIndex() != -1) {
+                // adding a book into the selected section
+                int selectedSectionId = Integer.parseInt(SectionsPanel.sectionsJList.getSelectedValue().toString().split("\\) ")[0]);
+                Section section = db.getSection(selectedSectionId);
 
+                // values for ComboBox
+                String[] booksValues = new String[db.getBooksFromSection(section.getId()).size()];
+                int i = 0;
+                for (Book book : db.getBooksFromSection(section.getId())) {
+                    booksValues[i] = book.getId() + ") " + book.getTitle();
+                    i++;
+                }
+
+                JLabel bookLabel = new JLabel("Book");
+                JComboBox bookField = new JComboBox(booksValues);
+                JPanel removeBookPanel = new JPanel();
+                removeBookPanel.add(bookLabel);
+                removeBookPanel.add(bookField);
+
+                int result = JOptionPane.showConfirmDialog(listSections, removeBookPanel, "Remove book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    Book book = db.getBook(Integer.parseInt((String.valueOf(bookField.getSelectedItem())).split("\\) ")[0]));
+                    library.removeBook(book);
+
+                    // updating books list
+                    BooksPanel.setCurrentBooks(new ArrayList<>(library.getBooks()));
+                }
+            }
+        });
 
         crud.add(show);
         crud.add(edit);

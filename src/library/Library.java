@@ -133,9 +133,6 @@ public class Library {
         } else {
             db.createBook(book);
             this.books.add(book);
-            this.authors.add(book.getAuthor());
-            this.sections.add(book.getSection());
-            this.publishingHouses.add(book.getPublishingHouse());
             System.out.println("The book " + book.getTitle() + " was successfully added to the library.");
         }
     }
@@ -296,7 +293,7 @@ public class Library {
         } else {
             db.createSection(section);
             this.sections.add(section);
-            this.books.addAll(section.getBooks());
+//            this.books.addAll(section.getBooks());
             System.out.println("The section " + section.getName() + " was successfully added.");
         }
     }
@@ -314,11 +311,11 @@ public class Library {
     synchronized public void removeSection(Section section) {
         Section sectionDB = db.getSection(section.getId());
         if (this.sections.contains(section) || sectionDB != null) {
-            db.deleteSection(section.getId());
             this.sections.remove(section);
-            for (Book book : section.getBooks()) {
+            for (Book book : db.getBooksFromSection(section.getId())) {
                 this.removeBook(book);
             }
+            db.deleteSection(section.getId());
             System.out.println("The section " + section.getName() + " was removed.");
         } else {
             System.out.println("The section doesn't exist in the library");
@@ -457,8 +454,8 @@ public class Library {
         }
     }
 
-    synchronized public void updateSection(int id, String name, int noBooks, List<Book> books) {
-        Section section = new Section(id, name, noBooks, books);
+    synchronized public void updateSection(int id, String name, int noBooks) {
+        Section section = new Section(id, name, noBooks);
         this.updateSection(section);
     }
 
@@ -483,7 +480,7 @@ public class Library {
         } else {
             db.createAuthor(author);
             this.authors.add(author);
-            this.books.addAll(author.getBooksWritten());
+//            this.books.addAll(author.getBooksWritten());
             System.out.println("The author " + author.getName() + " was successfully added.");
         }
     }
@@ -501,11 +498,11 @@ public class Library {
     synchronized public void removeAuthor(Author author) {
         Author authorDB = db.getAuthor(author.getId());
         if (this.authors.contains(author) || authorDB != null) {
-            db.deleteAuthor(author.getId());
             this.authors.remove(author);
-            for (Book book : author.getBooksWritten()) {
+            for (Book book : db.getBooksFromAuthor(author.getId())) {
                 this.books.remove(book);
             }
+            db.deleteAuthor(author.getId());
             System.out.println("The author " + author.getName() + " was successfully removed from the library.");
         } else {
             System.out.println("The author " + author.getName() + " doesn't exist in the library.");
@@ -665,7 +662,7 @@ public class Library {
     synchronized public void listBooksLent(Reader reader) {
         Reader readerDB = db.getReader(reader.getId());
         if (this.readers.contains(reader) && readerDB == null) {
-            if (reader.getBooksLent().isEmpty()) {
+            if (db.getBooksLentByReader(reader.getId()).isEmpty()) {
                 System.out.println("The reader " + reader.getName() + " hasn't lent any book yet.");
             } else {
                 reader.listBooksLent();

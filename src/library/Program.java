@@ -25,11 +25,11 @@ public class Program {
     private static GUI gui;
 
     public static void main(String[] args) throws SQLException {
-        // db.getConnection().createStatement().executeUpdate("DELETE FROM books");
-        // db.getConnection().createStatement().executeUpdate("DELETE FROM sections");
-        // db.getConnection().createStatement().executeUpdate("DELETE FROM authors");
-        // db.getConnection().createStatement().executeUpdate("DELETE FROM readers");
-        // db.getConnection().createStatement().executeUpdate("DELETE FROM publishingHouses");
+//        db.getConnection().createStatement().executeUpdate("DELETE FROM books");
+//        db.getConnection().createStatement().executeUpdate("DELETE FROM sections");
+//        db.getConnection().createStatement().executeUpdate("DELETE FROM authors");
+//        db.getConnection().createStatement().executeUpdate("DELETE FROM readers");
+//        db.getConnection().createStatement().executeUpdate("DELETE FROM publishingHouses");
 
         readAuthors();
         readSections();

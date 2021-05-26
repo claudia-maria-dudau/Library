@@ -8,17 +8,12 @@ import library.database.DB;
 import library.people.Author;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,158 +31,13 @@ public class BooksPanel extends JPanel {
         // JSplitPane listBooks = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
         // listing books
-        booksJList = this.createBooksJList(currentBooks);
+        booksJList = createBooksJList(currentBooks);
         JScrollPane listOfBooks = new JScrollPane(booksJList);
 
         listBooks.setLeftComponent(listOfBooks);
 
         // add book
-        JPanel addPanel = new JPanel();
-        addPanel.setLayout(new BoxLayout(addPanel, BoxLayout.Y_AXIS));
-
-        // values for combo box
-        String[] formatValues = {"physical", "pdf", "epub", "mobi", "azw", "iba"};
-
-        String[] sectionValues = new String[library.getSections().size()];
-        int i = 0;
-        for (Section section : library.getSections()) {
-            sectionValues[i] = section.getName();
-            i++;
-        }
-
-        String[] authorValues = new String[library.getAuthors().size()];
-        i = 0;
-        for (Author author : library.getAuthors()) {
-            authorValues[i] = author.getName();
-            i++;
-        }
-
-        String[] publishingHouseValues = new String[library.getPublishingHouses().size()];
-        i = 0;
-        for (PublishingHouse publishingHouse : library.getPublishingHouses()) {
-            publishingHouseValues[i] = publishingHouse.getName();
-            i++;
-        }
-
-        // title
-        JLabel titleLabel = new JLabel("Title*");
-        JTextField titleField = new JTextField(20);
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(titleLabel);
-        titlePanel.add(titleField);
-        addPanel.add(titlePanel);
-
-        // number of pages
-        JLabel noPagesLabel = new JLabel("Number of pages*");
-        JTextField noPagesField = new JTextField(20);
-        JPanel noPagesPanel = new JPanel();
-        noPagesPanel.add(noPagesLabel);
-        noPagesPanel.add(noPagesField);
-        addPanel.add(noPagesPanel);
-
-        // number of copies
-        JLabel noCopiesLabel = new JLabel("Number of copies");
-        JTextField noCopiesField = new JTextField(20);
-        JPanel noCopiesPanel = new JPanel();
-        noCopiesPanel.add(noCopiesLabel);
-        noCopiesPanel.add(noCopiesField);
-        addPanel.add(noCopiesPanel);
-
-        // publish date
-        JLabel publishDateLabel = new JLabel("Publish date*");
-        JTextField publishDateField = new JTextField("dd/mm/yyyy", 20);
-        JPanel publishDatePanel = new JPanel();
-        publishDatePanel.add(publishDateLabel);
-        publishDatePanel.add(publishDateField);
-        addPanel.add(publishDatePanel);
-
-        // format
-        JLabel formatLabel = new JLabel("Format*");
-        JComboBox formatField = new JComboBox(formatValues);
-        JPanel formatPanel = new JPanel();
-        formatPanel.add(formatLabel);
-        formatPanel.add(formatField);
-        addPanel.add(formatPanel);
-
-        // section
-        JLabel sectionLabel = new JLabel("Section*");
-        JComboBox sectionField = new JComboBox(sectionValues);
-        JPanel sectionPanel = new JPanel();
-        sectionPanel.add(sectionLabel);
-        sectionPanel.add(sectionField);
-        addPanel.add(sectionPanel);
-
-        // author
-        JLabel authorLabel = new JLabel("Author*");
-        JComboBox authorField = new JComboBox(authorValues);
-        JPanel authorPanel = new JPanel();
-        authorPanel.add(authorLabel);
-        authorPanel.add(authorField);
-        addPanel.add(authorPanel);
-
-        // publishing house
-        JLabel publishingHouseLabel = new JLabel("Publishing House*");
-        JComboBox publishingHouseField = new JComboBox(publishingHouseValues);
-        JPanel publishingHousePanel = new JPanel();
-        publishingHousePanel.add(publishingHouseLabel);
-        publishingHousePanel.add(publishingHouseField);
-        addPanel.add(publishingHousePanel);
-
-        // add button
-        JButton addBook = new JButton("Add book");
-        addBook.addActionListener(e -> {
-            if (!titleField.getText().equalsIgnoreCase("") && !noPagesField.getText().equalsIgnoreCase("") && !publishDateField.getText().equalsIgnoreCase("dd/mm/yyyy")) {
-                String title = titleField.getText();
-                int noPages = Integer.parseInt(noPagesField.getText());
-                java.sql.Date publishDate = null;
-                try {
-                    publishDate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(publishDateField.getText()).getTime());
-                } catch (ParseException parseException) {
-                    parseException.printStackTrace();
-                }
-                Section section = db.getSection(String.valueOf(sectionField.getSelectedItem()));
-                Author author = db.getAuthor(String.valueOf(authorField.getSelectedItem()));
-                PublishingHouse publishingHouse = db.getPublishingHouse(String.valueOf(publishingHouseField.getSelectedItem()));
-                String format = String.valueOf(formatField.getSelectedItem());
-
-                if (format.equalsIgnoreCase("physical")) {
-                    int noCopies = noCopiesField.getText().equals("") ? 1 : Integer.parseInt(noCopiesField.getText());
-                    library.addBook(title, noPages, publishDate, section, author, publishingHouse, noCopies);
-                } else {
-                    library.addBook(title, noPages, publishDate, section, author, publishingHouse, format);
-                }
-
-                // updating books list
-                currentBooks = new ArrayList<>(library.getBooks());
-                BooksPanel.booksJList = createBooksJList(currentBooks);
-                listBooks.setLeftComponent(booksJList);
-            } else {
-                JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
-
-            }
-        });
-
-        // reset button
-        JButton reset = new JButton("Reset");
-        reset.addActionListener(e -> {
-            titleField.setText("");
-            noPagesField.setText("");
-            noCopiesField.setText("");
-            publishDateField.setText("dd/mm/yyyy");
-        });
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(addBook);
-        buttonPanel.add(reset);
-        addPanel.add(buttonPanel);
-
-        // message
-        JLabel message = new JLabel("The fields marked with * are mandatory!");
-        JPanel messagePanel = new JPanel();
-        messagePanel.add(message);
-        addPanel.add(messagePanel);
-
-        listBooks.setRightComponent(addPanel);
+        this.setAddBookPanel();
 
 
         // SEARCH BOOKS PANEL
@@ -512,6 +362,10 @@ public class BooksPanel extends JPanel {
         this.add(searchBooks, BorderLayout.NORTH);
         this.add(listBooks, BorderLayout.CENTER);
         this.add(crud, BorderLayout.SOUTH);
+    }
+
+    public static void setAddBookPanel() {
+        listBooks.setRightComponent(new AddBookPanel(null, null));
     }
 
     public static void setCurrentBooks(List<Book> currentBooks) {

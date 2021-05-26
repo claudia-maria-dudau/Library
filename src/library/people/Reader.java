@@ -4,13 +4,14 @@ import library.database.DB;
 import library.books.Book;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class Reader extends Person {
     private final String address;
     private int noBooksLent;
-    private final ArrayList<Book> booksLent = new ArrayList<>();
+//    private final ArrayList<Book> booksLent = new ArrayList<>();
     private DB db = DB.getInstance();
 
     public Reader(String name, Date birthDate, String mail, String address) {
@@ -29,7 +30,7 @@ public class Reader extends Person {
         return "Reader{" +
                 "address='" + address + '\'' +
                 ", noBooksLent=" + noBooksLent +
-                ", booksLent=" + booksLent +
+//                ", booksLent=" + booksLent +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", birthDate=" + birthDate +
@@ -45,16 +46,16 @@ public class Reader extends Person {
         return noBooksLent;
     }
 
-    public ArrayList<Book> getBooksLent() {
-        return booksLent;
-    }
+//    public ArrayList<Book> getBooksLent() {
+//        return booksLent;
+//    }
 
     public void lendBook(Book book) {
         if (book.isAvailable() && this.noBooksLent < 5) {
             db.createLent(book.getId(), this.id, (java.sql.Date) new Date());
             System.out.println("Reader " + this.name + "lent a book.");
             book.lendBook();
-            this.booksLent.add(book);
+//            this.booksLent.add(book);
 
             if (book.getNoCopies() != Double.POSITIVE_INFINITY){
                 this.noBooksLent++;
@@ -70,7 +71,7 @@ public class Reader extends Person {
     public void returnBook(Book book){
         book.returnBook();
         this.noBooksLent--;
-        this.booksLent.remove(book);
+//        this.booksLent.remove(book);
         db.updateReader(this);
         db.updateLent(book.getId(), this.id, true);
     }
