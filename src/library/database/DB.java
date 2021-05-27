@@ -45,7 +45,7 @@ public class DB implements AutoCloseable {
 
         if (notFoundPublishingHouses) {
             connection.createStatement()
-                    .execute("CREATE TABLE publishingHouses (publishing_house_id int primary key, name varchar(50), establishment_date date)");
+                    .execute("CREATE TABLE publishingHouses (publishing_house_id int primary key, name varchar(50), establishment_date date, no_books int)");
         }
 
         if (notFoundAuthors) {
@@ -319,10 +319,11 @@ public class DB implements AutoCloseable {
     public void createPublishingHouse(PublishingHouse publishingHouse) {
         // adding a publishing house into the database
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO publishingHouses (publishing_house_id, name, establishment_date) VALUES (?,?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO publishingHouses (publishing_house_id, name, establishment_date, no_books) VALUES (?,?,?,?)");
             statement.setInt(1, publishingHouse.getId());
             statement.setString(2, publishingHouse.getName());
             statement.setDate(3, new java.sql.Date(publishingHouse.getEstablishmentDate().getTime()));
+            statement.setInt(4, publishingHouse.getNoBooks());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -337,7 +338,7 @@ public class DB implements AutoCloseable {
             ResultSet results = stmt.executeQuery();
 
             results.next();
-            return new PublishingHouse(results.getInt(1), results.getString(2), results.getDate(3));
+            return new PublishingHouse(results.getInt(1), results.getString(2), results.getDate(3), results.getInt(4));
         } catch (SQLException e) {
             return null;
         }
@@ -351,7 +352,7 @@ public class DB implements AutoCloseable {
             ResultSet results = stmt.executeQuery();
 
             results.next();
-            return new PublishingHouse(results.getInt(1), results.getString(2), results.getDate(3));
+            return new PublishingHouse(results.getInt(1), results.getString(2), results.getDate(3), results.getInt(4));
         } catch (SQLException e) {
             return null;
         }
@@ -376,10 +377,11 @@ public class DB implements AutoCloseable {
     public void updatePublishingHouse(PublishingHouse publishingHouse) {
         // updating a publishing house from the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE publishingHouses SET name = ?, establishment_date = ? WHERE publishing_house_id = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE publishingHouses SET name = ?, establishment_date = ?, no_books = ? WHERE publishing_house_id = ?");
             statement.setString(1, publishingHouse.getName());
             statement.setDate(2, new java.sql.Date(publishingHouse.getEstablishmentDate().getTime()));
-            statement.setInt(3, publishingHouse.getId());
+            statement.setInt(3, publishingHouse.getNoBooks());
+            statement.setInt(4, publishingHouse.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

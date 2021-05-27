@@ -213,6 +213,7 @@ public class AuthorsPanel extends JPanel {
                             parseException.printStackTrace();
                         }
                         String email = emailField1.getText().equalsIgnoreCase("") ? null : emailField1.getText();
+
                         library.updateAuthor(author.getId(), name, birthdate, email, author.getNoBooksWritten());
 
                         // updating authors list
@@ -255,7 +256,7 @@ public class AuthorsPanel extends JPanel {
                 int selectedAuthorId = Integer.parseInt(AuthorsPanel.authorsJList.getSelectedValue().toString().split("\\) ")[0]);
                 Author author = db.getAuthor(selectedAuthorId);
 
-                GUI.setAddBook(new AddBookPanel(null, author));
+                GUI.setAddBook(new AddBookPanel(null, author, null));
             }
         });
 
@@ -314,5 +315,4 @@ public class AuthorsPanel extends JPanel {
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         return list;
     }
-    
 }

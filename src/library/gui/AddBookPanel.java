@@ -21,7 +21,7 @@ public class AddBookPanel extends JPanel {
     private String[] authorValues;
     private String[] publishingHouseValues;
 
-    public AddBookPanel(Section section1, Author author1){
+    public AddBookPanel(Section section1, Author author1, PublishingHouse publishingHouse1){
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setComboBoxValues();
 
@@ -91,7 +91,9 @@ public class AddBookPanel extends JPanel {
         JPanel publishingHousePanel = new JPanel();
         publishingHousePanel.add(publishingHouseLabel);
         publishingHousePanel.add(publishingHouseField);
-        this.add(publishingHousePanel);
+        if (publishingHouse1 == null) {
+            this.add(publishingHousePanel);
+        }
 
         // add button
         JButton addBook = new JButton("Add book");
@@ -107,7 +109,7 @@ public class AddBookPanel extends JPanel {
                 }
                 Section section = section1 == null ? db.getSection(String.valueOf(sectionField.getSelectedItem())) : section1;
                 Author author = author1 == null ? db.getAuthor(String.valueOf(authorField.getSelectedItem())) : author1;
-                PublishingHouse publishingHouse = db.getPublishingHouse(String.valueOf(publishingHouseField.getSelectedItem()));
+                PublishingHouse publishingHouse = publishingHouse1 == null ? db.getPublishingHouse(String.valueOf(publishingHouseField.getSelectedItem())) : publishingHouse1;
 
                 String format = String.valueOf(formatField.getSelectedItem());
 

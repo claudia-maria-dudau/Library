@@ -24,7 +24,9 @@ public class GUI {
         JPanel sections = new SectionsPanel();
         content.addTab("Sections", sections);
 
-
+        // PANEL 3 - PUBLISHING HOUSES
+        JPanel publishingHouses = new PublishingHousesPanel();
+        content.addTab("Publishing Houses", publishingHouses);
 
         // PANEL 4 - AUTHORS
         JPanel authors = new AuthorsPanel();

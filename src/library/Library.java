@@ -888,15 +888,15 @@ public class Library {
             db.updatePublishingHouse(publishingHouse);
             List<PublishingHouse> publishingHousesToUpdate = this.publishingHouses.stream().filter(b -> b.getId() == publishingHouse.getId()).collect(Collectors.toList());
             for (PublishingHouse publishingHouse1 : publishingHousesToUpdate) {
-                this.sections.remove(publishingHouse1);
+                this.publishingHouses.remove(publishingHouse1);
             }
             this.publishingHouses.add(publishingHouse);
             System.out.println("The publishing house " + publishingHouse.getName() + " was successfully modified.");
         }
     }
 
-    synchronized public void updatePublishingHouse(int id, String name, Date establishmentDate) {
-        PublishingHouse publishingHouse = new PublishingHouse(id, name, establishmentDate);
+    synchronized public void updatePublishingHouse(int id, String name, Date establishmentDate, int noBooks) {
+        PublishingHouse publishingHouse = new PublishingHouse(id, name, establishmentDate, noBooks);
         this.updatePublishingHouse(publishingHouse);
     }
 }

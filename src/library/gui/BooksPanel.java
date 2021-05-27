@@ -365,7 +365,7 @@ public class BooksPanel extends JPanel {
     }
 
     public static void setAddBookPanel() {
-        listBooks.setRightComponent(new AddBookPanel(null, null));
+        listBooks.setRightComponent(new AddBookPanel(null, null, null));
     }
 
     public static void setCurrentBooks(List<Book> currentBooks) {

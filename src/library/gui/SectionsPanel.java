@@ -206,7 +206,7 @@ public class SectionsPanel extends JPanel {
                 int selectedSectionId = Integer.parseInt(SectionsPanel.sectionsJList.getSelectedValue().toString().split("\\) ")[0]);
                 Section section = db.getSection(selectedSectionId);
 
-                GUI.setAddBook(new AddBookPanel(section, null));
+                GUI.setAddBook(new AddBookPanel(section, null, null));
             }
         });
 

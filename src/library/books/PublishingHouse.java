@@ -12,7 +12,8 @@ public class PublishingHouse {
     private int id;
     private final String name;
     private final Date establishmentDate;
-    private final ArrayList<Book> books = new ArrayList<>();
+    private int noBooks;
+//    private final ArrayList<Book> books = new ArrayList<>();
     private DB db = DB.getInstance();
 
     public PublishingHouse(String name, Date establishmentDate) {
@@ -21,10 +22,11 @@ public class PublishingHouse {
         this.establishmentDate = establishmentDate;
     }
 
-    public PublishingHouse(int id, String name, Date establishmentDate) {
+    public PublishingHouse(int id, String name, Date establishmentDate, int noBooks) {
         this.id = id;
         this.name = name;
         this.establishmentDate = establishmentDate;
+        this.noBooks = noBooks;
     }
 
     @Override
@@ -33,7 +35,8 @@ public class PublishingHouse {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", establishmentDate=" + establishmentDate +
-                ", books=" + books +
+                ", noBooks=" + noBooks +
+//                ", books=" + books +
                 '}';
     }
 
@@ -63,26 +66,34 @@ public class PublishingHouse {
         return establishmentDate;
     }
 
+    public int getNoBooks() {
+        return noBooks;
+    }
+
     public static void setNoPublishingHouses(int noPublishingHouses) {
         PublishingHouse.noPublishingHouses = noPublishingHouses;
     }
 
     public void addBook(Book book) {
-        if (!this.books.contains(book)) {
-            this.books.add(book);
-        }
-        else{
-            System.out.println("The book already exists from the publishing house " + this.name + ".");
-        }
+//        if (!this.books.contains(book)) {
+//            this.books.add(book);
+            this.noBooks++;
+            db.updatePublishingHouse(this);
+//        }
+//        else{
+//            System.out.println("The book already exists from the publishing house " + this.name + ".");
+//        }
     }
 
     public void removeBook(Book book) {
-        if (this.books.contains(book)){
-            this.books.remove(book);
-        }
-        else{
-            System.out.println("The book " + book.getTitle() + " doesn't exist from the publishing house " + this.name + ".");
-        }
+//        if (this.books.contains(book)){
+//            this.books.remove(book);
+            this.noBooks--;
+            db.updatePublishingHouse(this);
+//        }
+//        else{
+//            System.out.println("The book " + book.getTitle() + " doesn't exist from the publishing house " + this.name + ".");
+//        }
     }
 
     public void listBooks(){
