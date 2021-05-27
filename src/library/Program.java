@@ -24,7 +24,7 @@ public class Program {
     private static final DB db = DB.getInstance();
     private static GUI gui;
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM books");
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM sections");
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM authors");

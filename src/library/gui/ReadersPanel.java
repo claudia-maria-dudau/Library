@@ -7,8 +7,6 @@ import library.people.Reader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,37 +70,32 @@ public class ReadersPanel extends JPanel {
 
         // add button
         JButton addReader = new JButton("Add reader");
-        addReader.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!nameField.getText().equalsIgnoreCase("") && !birthdateField.getText().equalsIgnoreCase("dd/mm/yyyy") && !emailField.getText().equalsIgnoreCase("") && !addressField.getText().equalsIgnoreCase("")) {
-                    String name = nameField.getText();
-                    java.sql.Date birthdate = null;
-                    try {
-                        birthdate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(birthdateField.getText()).getTime());
-                    } catch (ParseException parseException) {
-                        parseException.printStackTrace();
-                    }
-                    String email = emailField.getText();
-                    String address = addressField.getText();
-
-                    library.addReader(name, birthdate, email, address);
-
-                    // updating readers list
-                    currentReaders = new ArrayList<>(library.getReaders());
-                    ReadersPanel.readersJList = createReadersJList(currentReaders);
-                    listReaders.setLeftComponent(readersJList);
-                } else {
-                    JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
+        addReader.addActionListener(e -> {
+            if (!nameField.getText().equalsIgnoreCase("") && !birthdateField.getText().equalsIgnoreCase("dd/mm/yyyy") && !emailField.getText().equalsIgnoreCase("") && !addressField.getText().equalsIgnoreCase("")) {
+                String name = nameField.getText();
+                java.sql.Date birthdate = null;
+                try {
+                    birthdate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(birthdateField.getText()).getTime());
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
                 }
+                String email = emailField.getText();
+                String address = addressField.getText();
+
+                library.addReader(name, birthdate, email, address);
+
+                // updating readers list
+                currentReaders = new ArrayList<>(library.getReaders());
+                ReadersPanel.readersJList = createReadersJList(currentReaders);
+                listReaders.setLeftComponent(readersJList);
+            } else {
+                JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
             }
         });
 
         // reset button
         JButton reset = new JButton("Reset");
-        reset.addActionListener(e -> {
-            nameField.setText("");
-        });
+        reset.addActionListener(e -> nameField.setText(""));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(addReader);

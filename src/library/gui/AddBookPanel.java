@@ -7,8 +7,6 @@ import library.database.DB;
 import library.people.Author;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 public class AddBookPanel extends JPanel {
     private final Library library = Library.getInstance();
     private final DB db = DB.getInstance();
-    private String[] formatValues = {"physical", "pdf", "epub", "mobi", "azw", "iba"};
+    private final String[] formatValues = {"physical", "pdf", "epub", "mobi", "azw", "iba"};
     private String[] sectionValues;
     private String[] authorValues;
     private String[] publishingHouseValues;

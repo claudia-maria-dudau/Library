@@ -4,14 +4,11 @@ import library.Library;
 import library.books.Book;
 import library.books.Section;
 import library.database.DB;
-import library.people.Author;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,31 +45,26 @@ public class SectionsPanel extends JPanel {
 
         // add button
         JButton addSection = new JButton("Add section");
-        addSection.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!nameField.getText().equalsIgnoreCase("")) {
-                    String name = nameField.getText();
-                    library.addSection(name);
+        addSection.addActionListener(e -> {
+            if (!nameField.getText().equalsIgnoreCase("")) {
+                String name = nameField.getText();
+                library.addSection(name);
 
-                    // updating sections list
-                    currentSections = new ArrayList<>(library.getSections());
-                    SectionsPanel.sectionsJList = createSectionsJList(currentSections);
-                    listSections.setLeftComponent(sectionsJList);
+                // updating sections list
+                currentSections = new ArrayList<>(library.getSections());
+                SectionsPanel.sectionsJList = createSectionsJList(currentSections);
+                listSections.setLeftComponent(sectionsJList);
 
-                    BooksPanel.setAddBookPanel();
-                } else {
-                    JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
+                BooksPanel.setAddBookPanel();
+            } else {
+                JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
 
-                }
             }
         });
 
         // reset button
         JButton reset = new JButton("Reset");
-        reset.addActionListener(e -> {
-            nameField.setText("");
-        });
+        reset.addActionListener(e -> nameField.setText(""));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(addSection);
@@ -128,15 +120,15 @@ public class SectionsPanel extends JPanel {
                 Section section = db.getSection(selectedSectionId);
 
                 // details about section
-                String sectionString = "Name: " + section.getName() +
+                StringBuilder sectionString = new StringBuilder("Name: " + section.getName() +
                         "\nNumber of books in the section: " + section.getNoBooks() +
-                        "\nBooks in the section:\n";
+                        "\nBooks in the section:\n");
 
                 for (Book book : db.getBooksFromSection(section.getId())) {
-                    sectionString += book.getTitle() + "\n";
+                    sectionString.append(book.getTitle()).append("\n");
                 }
 
-                JOptionPane.showMessageDialog(listSections, sectionString, section.getName(), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(listSections, sectionString.toString(), section.getName(), JOptionPane.INFORMATION_MESSAGE);
             }
         });
 

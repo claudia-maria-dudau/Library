@@ -55,38 +55,33 @@ public class PublishingHousesPanel extends JPanel {
 
         // add button
         JButton addPublishingHouse = new JButton("Add publishingHouse");
-        addPublishingHouse.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!nameField.getText().equalsIgnoreCase("") && !establishmentDateField.getText().equalsIgnoreCase("dd/mm/yyyy")) {
-                    String name = nameField.getText();
-                    java.sql.Date establishmentDate = null;
-                    try {
-                        establishmentDate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(establishmentDateField.getText()).getTime());
-                    } catch (ParseException parseException) {
-                        parseException.printStackTrace();
-                    }
-
-                    library.addPublishingHouse(name, establishmentDate);
-
-                    // updating publishingHouses list
-                    currentPublishingHouses = new ArrayList<>(library.getPublishingHouses());
-                    PublishingHousesPanel.publishingHousesJList = createPublishingHousesJList(currentPublishingHouses);
-                    listPublishingHouses.setLeftComponent(publishingHousesJList);
-
-                    BooksPanel.setAddBookPanel();
-                } else {
-                    JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
-
+        addPublishingHouse.addActionListener(e -> {
+            if (!nameField.getText().equalsIgnoreCase("") && !establishmentDateField.getText().equalsIgnoreCase("dd/mm/yyyy")) {
+                String name = nameField.getText();
+                java.sql.Date establishmentDate = null;
+                try {
+                    establishmentDate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(establishmentDateField.getText()).getTime());
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
                 }
+
+                library.addPublishingHouse(name, establishmentDate);
+
+                // updating publishingHouses list
+                currentPublishingHouses = new ArrayList<>(library.getPublishingHouses());
+                PublishingHousesPanel.publishingHousesJList = createPublishingHousesJList(currentPublishingHouses);
+                listPublishingHouses.setLeftComponent(publishingHousesJList);
+
+                BooksPanel.setAddBookPanel();
+            } else {
+                JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
         });
 
         // reset button
         JButton reset = new JButton("Reset");
-        reset.addActionListener(e -> {
-            nameField.setText("");
-        });
+        reset.addActionListener(e -> nameField.setText(""));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(addPublishingHouse);
@@ -142,16 +137,16 @@ public class PublishingHousesPanel extends JPanel {
                 PublishingHouse publishingHouse = db.getPublishingHouse(selectedPublishingHouseId);
 
                 // details about publishingHouse
-                String publishingHouseString = "Name: " + publishingHouse.getName() +
+                StringBuilder publishingHouseString = new StringBuilder("Name: " + publishingHouse.getName() +
                         "\nEstablishment date: " + new SimpleDateFormat("dd MMMM yyyy").format(publishingHouse.getEstablishmentDate()) +
                         "\nNumber of books from the publishing house: " + publishingHouse.getNoBooks() +
-                        "\nBooks from the publishing house:\n";
+                        "\nBooks from the publishing house:\n");
 
                 for (Book book : db.getBooksFromPublishingHouse(publishingHouse.getId())) {
-                    publishingHouseString += book.getTitle() + "\n";
+                    publishingHouseString.append(book.getTitle()).append("\n");
                 }
 
-                JOptionPane.showMessageDialog(listPublishingHouses, publishingHouseString, publishingHouse.getName(), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(listPublishingHouses, publishingHouseString.toString(), publishingHouse.getName(), JOptionPane.INFORMATION_MESSAGE);
             }
         });
 

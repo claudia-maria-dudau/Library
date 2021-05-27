@@ -1,14 +1,11 @@
 package library.gui;
 
-import library.books.Section;
-import library.people.Author;
-
 import javax.swing.*;
 
 public class GUI {
     private static GUI instance;
-    private JFrame principal;
-    private static JFrame addBook = new JFrame("Add book");
+    private final JFrame principal;
+    private static final JFrame addBook = new JFrame("Add book");
 
     private GUI() {
         // principal frame

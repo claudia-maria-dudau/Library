@@ -64,39 +64,34 @@ public class AuthorsPanel extends JPanel {
 
         // add button
         JButton addAuthor = new JButton("Add author");
-        addAuthor.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!nameField.getText().equalsIgnoreCase("") && !birthdateField.getText().equalsIgnoreCase("dd/mm/yyyy")) {
-                    String name = nameField.getText();
-                    java.sql.Date birthdate = null;
-                    try {
-                        birthdate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(birthdateField.getText()).getTime());
-                    } catch (ParseException parseException) {
-                        parseException.printStackTrace();
-                    }
-                    String email = emailField.getText().equalsIgnoreCase("") ? null : emailField.getText();
-
-                    library.addAuthor(name, birthdate, email);
-
-                    // updating authors list
-                    currentAuthors = new ArrayList<>(library.getAuthors());
-                    AuthorsPanel.authorsJList = createAuthorsJList(currentAuthors);
-                    listAuthors.setLeftComponent(authorsJList);
-
-                    BooksPanel.setAddBookPanel();
-                } else {
-                    JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
-
+        addAuthor.addActionListener(e -> {
+            if (!nameField.getText().equalsIgnoreCase("") && !birthdateField.getText().equalsIgnoreCase("dd/mm/yyyy")) {
+                String name = nameField.getText();
+                java.sql.Date birthdate = null;
+                try {
+                    birthdate = new java.sql.Date(new SimpleDateFormat("dd/MM/yyyy").parse(birthdateField.getText()).getTime());
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
                 }
+                String email = emailField.getText().equalsIgnoreCase("") ? null : emailField.getText();
+
+                library.addAuthor(name, birthdate, email);
+
+                // updating authors list
+                currentAuthors = new ArrayList<>(library.getAuthors());
+                AuthorsPanel.authorsJList = createAuthorsJList(currentAuthors);
+                listAuthors.setLeftComponent(authorsJList);
+
+                BooksPanel.setAddBookPanel();
+            } else {
+                JOptionPane.showMessageDialog(addPanel, "Please complete all the required fields!", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
         });
 
         // reset button
         JButton reset = new JButton("Reset");
-        reset.addActionListener(e -> {
-            nameField.setText("");
-        });
+        reset.addActionListener(e -> nameField.setText(""));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(addAuthor);
@@ -152,17 +147,17 @@ public class AuthorsPanel extends JPanel {
                 Author author = db.getAuthor(selectedAuthorId);
 
                 // details about author
-                String authorString = "Name: " + author.getName() +
+                StringBuilder authorString = new StringBuilder("Name: " + author.getName() +
                         "\nBirthdate: " + new SimpleDateFormat("dd MMMM yyyy").format(author.getBirthDate()) +
                         "\nEmail: " + author.getMail() +
                         "\nNumber of books written by the author: " + author.getNoBooksWritten() +
-                        "\nBooks written by the author:\n";
+                        "\nBooks written by the author:\n");
 
                 for (Book book : db.getBooksFromAuthor(author.getId())) {
-                    authorString += book.getTitle() + "\n";
+                    authorString.append(book.getTitle()).append("\n");
                 }
 
-                JOptionPane.showMessageDialog(listAuthors, authorString, author.getName(), JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(listAuthors, authorString.toString(), author.getName(), JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
