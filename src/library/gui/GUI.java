@@ -25,6 +25,12 @@ public class GUI {
         content.addTab("Sections", sections);
 
 
+
+        // PANEL 4 - AUTHORS
+        JPanel authors = new AuthorsPanel();
+        content.addTab("Authors", authors);
+
+
         this.principal.setContentPane(content);
         this.principal.setVisible(true);
     }

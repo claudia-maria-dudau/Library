@@ -31,11 +31,11 @@ public class Program {
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM readers");
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM publishingHouses");
 
-        readAuthors();
-        readSections();
-        readPublishingHouse();
-        readBooks();
-        readReaders();
+//        readAuthors();
+//        readSections();
+//        readPublishingHouse();
+//        readBooks();
+//        readReaders();
 
         Book.setNoBooks(library.getBooks().size());
         Section.setNoSections(library.getSections().size());

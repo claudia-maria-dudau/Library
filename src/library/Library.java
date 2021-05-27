@@ -594,7 +594,7 @@ public class Library {
             db.updateAuthor(author);
             List<Author> authorsToUpdate = this.authors.stream().filter(b -> b.getId() == author.getId()).collect(Collectors.toList());
             for (Author author1 : authorsToUpdate) {
-                this.sections.remove(author1);
+                this.authors.remove(author1);
             }
             this.authors.add(author);
             System.out.println("The author " + author.getName() + " was successfully modified.");
