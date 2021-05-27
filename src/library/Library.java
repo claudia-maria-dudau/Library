@@ -639,8 +639,11 @@ public class Library {
     synchronized public void removeReader(Reader reader) {
         Reader readerDB = db.getReader(reader.getId());
         if (this.readers.contains(reader) || readerDB != null) {
-            db.deleteReader(reader.getId());
             this.readers.remove(reader);
+            for (Book book : db.getBooksLentByReader(reader.getId())) {
+                book.returnBook();
+            }
+            db.deleteReader(reader.getId());
             System.out.println("The reader was successfully removed from the library.");
         } else {
             System.out.println("The reader " + reader.getName() + " doesn't exist.");

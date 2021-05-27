@@ -1,5 +1,8 @@
 package library.gui;
 
+import library.books.Section;
+import library.people.Author;
+
 import javax.swing.*;
 
 public class GUI {
@@ -17,21 +20,24 @@ public class GUI {
         JTabbedPane content = new JTabbedPane();
 
         // PANEL 1 - BOOKS
-        JPanel books = new BooksPanel();
+        BooksPanel books = new BooksPanel();
         content.addTab("Books", books);
 
         // PANEL 2 - SECTIONS
-        JPanel sections = new SectionsPanel();
+        SectionsPanel sections = new SectionsPanel();
         content.addTab("Sections", sections);
 
         // PANEL 3 - PUBLISHING HOUSES
-        JPanel publishingHouses = new PublishingHousesPanel();
+        PublishingHousesPanel publishingHouses = new PublishingHousesPanel();
         content.addTab("Publishing Houses", publishingHouses);
 
         // PANEL 4 - AUTHORS
-        JPanel authors = new AuthorsPanel();
+        AuthorsPanel authors = new AuthorsPanel();
         content.addTab("Authors", authors);
 
+        // PANEL 5 - READERS
+        ReadersPanel readers = new ReadersPanel();
+        content.addTab("Readers", readers);
 
         this.principal.setContentPane(content);
         this.principal.setVisible(true);

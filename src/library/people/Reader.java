@@ -52,7 +52,7 @@ public class Reader extends Person {
 
     public void lendBook(Book book) {
         if (book.isAvailable() && this.noBooksLent < 5) {
-            db.createLent(book.getId(), this.id, (java.sql.Date) new Date());
+            db.createLent(book.getId(), this.id, new java.sql.Date(new Date().getTime()));
             System.out.println("Reader " + this.name + "lent a book.");
             book.lendBook();
 //            this.booksLent.add(book);

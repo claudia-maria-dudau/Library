@@ -630,6 +630,74 @@ public class DB implements AutoCloseable {
         return books;
     }
 
+    public List<Book> getBooksLentByReaderUnreturned(int readerId) {
+        // getting all the books lent by a given reader from the database which were not returned
+        List<Book> books = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM books WHERE format = 'physical' AND book_id IN (SELECT book_id FROM lent WHERE reader_id = ? AND returned = 0)");
+            statement.setInt(1, readerId);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                books.add(getBook(results.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
+
+    public List<Book> getBooksLentByReaderReturned(int readerId) {
+        // getting all the books lent by a given reader from the database which were not returned
+        List<Book> books = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM lent WHERE reader_id = ? AND returned = 1");
+            statement.setInt(1, readerId);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                books.add(getBook(results.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
+
+    public List<Book> getBooksForLent(int readerId) {
+        // getting all the books which are not already being lend by a reader in the database
+        List<Book> books = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM books WHERE no_copies <> 0 AND book_id NOT IN (SELECT book_id FROM lent WHERE reader_id = ? AND returned = 0)");
+            statement.setInt(1, readerId);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                books.add(getBook(results.getInt(1)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
+
+    public boolean bookReturned(int readerId, int bookId){
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT returned FROM lent WHERE reader_id = ? AND book_id = ?");
+            statement.setInt(1, readerId);
+            statement.setInt(2, bookId);
+            ResultSet results = statement.executeQuery();
+            results.next();
+            return results.getInt(1) == 1 ? true : false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
     //book lendings related actions
     public void createLent(int bookId, int readerId, Date lentDate) {
