@@ -355,7 +355,7 @@ public class BooksPanel extends JPanel {
                     int result = JOptionPane.showConfirmDialog(listBooks, lostCopyPanel, "Remove copies", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                     if (result == JOptionPane.OK_OPTION) {
                         int noCopies = Integer.parseInt(lostCopyField.getText());
-                        library.addCopies(book, noCopies);
+                        library.lostCopy(book, noCopies);
                     }
                 } else {
                     JOptionPane.showMessageDialog(listBooks, "Can only remove copies from physical books!", "Warning", JOptionPane.WARNING_MESSAGE);

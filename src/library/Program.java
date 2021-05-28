@@ -9,9 +9,11 @@ import library.database.DB;
 import library.gui.GUI;
 import library.people.Author;
 import library.people.Person;
+import library.people.Reader;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +26,7 @@ public class Program {
     private static final DB db = DB.getInstance();
     private static GUI gui;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM books");
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM sections");
 //        db.getConnection().createStatement().executeUpdate("DELETE FROM authors");
@@ -37,10 +39,10 @@ public class Program {
 //        readBooks();
 //        readReaders();
 
-        Book.setNoBooks(library.getBooks().size());
-        Section.setNoSections(library.getSections().size());
-        Person.setNoPersons(library.getAuthors().size() + library.getReaders().size());
-        PublishingHouse.setNoPublishingHouses(library.getPublishingHouses().size());
+        Book.setNoBooks(library.getBooks().stream().max(Comparator.comparingInt(Book::getId)).get().getId());
+        Section.setNoSections(library.getSections().stream().max(Comparator.comparingInt(Section::getId)).get().getId());
+        Person.setNoPersons(Integer.max(library.getAuthors().stream().max(Comparator.comparingInt(Author::getId)).get().getId(), library.getReaders().stream().max(Comparator.comparingInt(Reader::getId)).get().getId()));
+        PublishingHouse.setNoPublishingHouses(library.getPublishingHouses().stream().max(Comparator.comparingInt(PublishingHouse::getId)).get().getId());
 
         gui = GUI.getInstance();
 
