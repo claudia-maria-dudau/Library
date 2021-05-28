@@ -260,10 +260,15 @@ public class PublishingHousesPanel extends JPanel {
                 int result = JOptionPane.showConfirmDialog(listPublishingHouses, removeBookPanel, "Remove book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     Book book = db.getBook(Integer.parseInt((String.valueOf(bookField.getSelectedItem())).split("\\) ")[0]));
-                    library.removeBook(book);
 
-                    // updating books list
-                    BooksPanel.setCurrentBooks(new ArrayList<>(library.getBooks()));
+                    if (db.allCopiesReturned(book.getId())) {
+                        library.removeBook(book);
+
+                        // updating books list
+                        BooksPanel.setCurrentBooks(new ArrayList<>(library.getBooks()));
+                    } else {
+                        JOptionPane.showMessageDialog(listOfPublishingHouses, "Cannot delete a book which has still lent copies of it!", "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
             }
         });

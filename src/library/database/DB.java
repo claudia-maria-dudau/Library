@@ -699,6 +699,21 @@ public class DB implements AutoCloseable {
         return false;
     }
 
+    public boolean allCopiesReturned(int bookId){
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT book_id FROM books WHERE format = 'physical' AND book_id IN (SELECT  book_id From lent WHERE book_id = ? AND returned = 0)");
+            statement.setInt(1, bookId);
+            ResultSet results = statement.executeQuery();
+            while(results.next()){
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
     //book lendings related actions
     public void createLent(int bookId, int readerId, Date lentDate) {
         // adding a book lending into the database

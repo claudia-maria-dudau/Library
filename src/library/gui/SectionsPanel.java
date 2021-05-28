@@ -227,10 +227,14 @@ public class SectionsPanel extends JPanel {
                 int result = JOptionPane.showConfirmDialog(listSections, removeBookPanel, "Remove book", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     Book book = db.getBook(Integer.parseInt((String.valueOf(bookField.getSelectedItem())).split("\\) ")[0]));
-                    library.removeBook(book);
+                    if (db.allCopiesReturned(book.getId())) {
+                        library.removeBook(book);
 
-                    // updating books list
-                    BooksPanel.setCurrentBooks(new ArrayList<>(library.getBooks()));
+                        // updating books list
+                        BooksPanel.setCurrentBooks(new ArrayList<>(library.getBooks()));
+                    } else {
+                        JOptionPane.showMessageDialog(listOfSections, "Cannot delete a book which has still lent copies of it!", "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
             }
         });

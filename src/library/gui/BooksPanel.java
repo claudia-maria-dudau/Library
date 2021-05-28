@@ -298,10 +298,14 @@ public class BooksPanel extends JPanel {
                 int selectedBookId = Integer.parseInt(BooksPanel.booksJList.getSelectedValue().toString().split("\\) ")[0]);
                 Book book = db.getBook(selectedBookId);
 
-                library.removeBook(book);
-                currentBooks = new ArrayList<>(library.getBooks());
-                BooksPanel.booksJList = createBooksJList(currentBooks);
-                listBooks.setLeftComponent(new JScrollPane(booksJList));
+                if (db.allCopiesReturned(book.getId())) {
+                    library.removeBook(book);
+                    currentBooks = new ArrayList<>(library.getBooks());
+                    BooksPanel.booksJList = createBooksJList(currentBooks);
+                    listBooks.setLeftComponent(new JScrollPane(booksJList));
+                } else {
+                    JOptionPane.showMessageDialog(listOfBooks, "Cannot delete a book which has still lent copies of it!", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
 
